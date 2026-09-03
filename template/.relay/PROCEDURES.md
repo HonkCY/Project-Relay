@@ -13,8 +13,11 @@ No procedures yet.
 - **Authority:** accepted | provisional | superseded | rejected | unresolved
 - **Provenance:** live-environment | durable-artifact | incumbent-recall | human-report | inference | unknown
 - **Verification:** verified | unverified | contradicted | stale | inaccessible
+- **Evidence ref:** safe locator, test result, or none
+- **Checked by/at:** human/agent/tool identity and ISO-8601 time or unknown
 - **Owner:** human/role or unknown
 - **Last tested:** ISO-8601 timestamp/date or never
+- **Accepted by/at:** identity/time when authority is accepted
 - **Applies to:** R/D IDs and version scope
 
 ### Preconditions and inputs
@@ -37,4 +40,3 @@ Exact checks and pass criteria.
 
 Safe rollback, retry, troubleshooting, escalation, and human gate.
 ```
-

@@ -7,5 +7,4 @@
 *.p12
 credentials.json
 secrets.*
-.relay/private/
-
+**/.relay/private/

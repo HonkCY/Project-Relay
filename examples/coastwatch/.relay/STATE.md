@@ -1,6 +1,9 @@
 # Current state
 
 Snapshot boundary: 2026-09-01T09:45:00Z (synthetic fixture).
+Migration basis:
+[MC-007](migration/AUDIT.md#mc-007--s-14-exclusion-remains-a-proposal-pending-pi-disposition)
+and synthetic cutover tag `relay-cutover-2026-09-01-coastwatch`.
 
 - **Frontier:** decide whether sensor S-14 should be excluded before freezing the
   v3 salinity normalization result.
@@ -22,12 +25,11 @@ Snapshot boundary: 2026-09-01T09:45:00Z (synthetic fixture).
 - No operational blocker prevents manual QC review.
 - [R-011](RECORDS.md#r-011--pilot-threshold-rationale) is an inaccessible forensic
   rationale; it does not control v3 normalization.
-- Output from stale job observation [R-008](RECORDS.md#r-008--legacy-sensitivity-job)
-  must not be consumed until the scheduler and output are rechecked.
+- [R-008](RECORDS.md#r-008--legacy-sensitivity-job) and R-012 remain unusable; follow
+  R-008's owning record for every forensic-use gate.
 
 ## Background execution
 
-No job has evidence fresh enough to be called queued or running. R-007 is only
-planned; R-008's old running observation is stale. Follow their records and P-004
-before making a current claim.
-
+No job has evidence fresh enough to be called queued/running, and no service has
+evidence fresh enough to be called running/healthy. Follow R-007 through R-009 and
+P-004 for the owning observations and verification steps.

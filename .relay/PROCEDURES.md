@@ -5,10 +5,13 @@
 - **Authority:** provisional
 - **Provenance:** durable-artifact
 - **Verification:** unverified
+- **Evidence ref:** `docs/acceptance-tests.md`; [v0.1 internal validation](../docs/validation.md)
+- **Checked by/at:** Codex implementation agent / 2026-09-03
 - **Owner:** repository maintainer
-- **Last tested:** not yet
+- **Last tested:** internal repository subset on 2026-09-03; full native A/B runs pending
+- **Applies to:** D-002 through D-005 and all v0.1 acceptance scenarios
 
-### Preconditions
+### Preconditions and inputs
 
 - All files are visible in the working tree.
 - The reviewer has read the authoritative design brief or its required outcomes.
@@ -22,7 +25,13 @@
 4. Check the repository for private locators, credentials, secret-like assignments,
    or motivating-project excerpts.
 5. Record failures against stable IDs; do not hide unknown or inaccessible surfaces.
-6. If acceptable, explicitly accept or revise provisional decisions D-002–D-005.
+6. If acceptable, explicitly accept or revise provisional decisions D-002–D-004 and
+   verify conformance with accepted D-005.
+
+### Outputs
+
+A review verdict, evidence for each acceptance scenario, and any resulting updates to
+the owning D/R/P records and STATE snapshot.
 
 ### Verification
 
@@ -31,5 +40,6 @@
 
 ### Recovery
 
-If a scenario fails, leave the design provisional, record the failing evidence and
-impact in `STATE.md`, then fix the owning record and commit a coherent correction.
+If a scenario fails, leave the design provisional, store the detailed evidence in its
+owning record or test artifact, surface only a linked urgent blocker in `STATE.md`,
+then fix the owner and commit a coherent correction.

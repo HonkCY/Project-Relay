@@ -16,17 +16,23 @@ folder are the durable system of record.
 ## Start here
 
 - To understand the design, read [the protocol](docs/protocol.md).
+- To inspect the object-model tradeoffs and failure-mode challenge, read
+  [design decisions](docs/design-decisions.md).
 - To add Relay to a new or already self-contained project, follow
   [INIT](docs/init.md).
 - To externalize a project whose important state is still in native-agent chats,
   memories, remote hosts, or running systems, follow [MIGRATE](docs/migrate.md).
 - To review the design, run the scenarios in
   [acceptance tests](docs/acceptance-tests.md).
+- To inspect what was and was not exercised at the checkpoint, read the
+  [v0.1 validation record](docs/validation.md).
 - To see a filled workspace, open the
   [Coastwatch example](examples/coastwatch/README.md).
 
-Do not substitute INIT for MIGRATE. If latent context or external operational
-state matters, migration is a provenance reconstruction, not a file-copy task.
+Do not substitute INIT for MIGRATE. If material context or external operational
+state is latent, unexternalized, or uncertain, migration is a provenance
+reconstruction, not a file-copy task. Explicitly supplied, already verifiable remote
+records may still use INIT.
 
 ## Normal workspace experience
 
@@ -81,6 +87,6 @@ scheduler, service, or agent run that can be independently checked.
 
 ## Status
 
-v0.1 is a design checkpoint awaiting human review. The protocol is directly usable
-as Markdown, but compatibility beyond the documented Codex and Claude Code entry
-points is an extension, not a v0.1 promise.
+The [canonical repository state](.relay/STATE.md) owns the live checkpoint, review
+gate, and known risks. This README's static version label is the v0.1 protocol design;
+the validation record distinguishes internal evidence from pending native runs.

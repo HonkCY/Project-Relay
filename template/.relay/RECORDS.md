@@ -16,7 +16,9 @@ Leave absent categories empty; do not invent entities to fill the template.
 - **Status or last observation:** value plus time when time-sensitive
 - **Evidence ref:** safe locator or check result
 - **Checked at:** ISO-8601 timestamp/date or unknown
+- **Checked by:** human/agent/tool identity or unknown
 - **Valid until / recheck rule:** time/event or not-applicable
+- **Accepted by/at:** identity/time when authority is accepted
 - **Owner:** human/role or unknown
 - **Inputs / outputs / dependencies:** stable IDs or none
 - **Risks/limitations:** none or explicit unknown
@@ -56,7 +58,8 @@ Allowed observed states: `planned`, `queued`, `running`, `blocked`, `succeeded`,
 host, real process/job/run ID, command/spec and working-directory/revision reference,
 inputs, outputs/logs, submit/start time, check method/result/time/freshness, owner,
 next human gate, and recovery procedure. Store exact commands in a procedure and link
-them here.
+them here. Recurring/scheduled work also requires scheduler/automation entry ID,
+schedule, next-run evidence, and a disable procedure.
 
 No records yet; therefore no background work is claimed.
 
@@ -72,4 +75,3 @@ No records yet.
 Store only secret class plus safe configuration/acquisition reference, never a value.
 
 No records yet.
-

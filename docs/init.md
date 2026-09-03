@@ -37,11 +37,17 @@ initial state when relevant; do not discard or absorb unrelated changes silently
 
 ### 2. Install the neutral workspace
 
-Copy the template's `.relay/` directory into the project root:
+If `.relay/` is absent, copy the template directory with an explicit no-clobber
+guard:
 
 ```sh
+test ! -e .relay || { printf '%s\n' '.relay already exists; stop for reviewed merge' >&2; exit 1; }
 cp -R /path/to/project-relay/template/.relay .
 ```
+
+If `.relay/` already exists, do not run the copy command. Treat this as an upgrade:
+compare protocol versions and merge individual missing/schema changes only after
+reviewing the existing canonical owners and dirty Git state.
 
 Then merge the template's ignore patterns into the project's `.gitignore`. Ignore
 rules are defense in depth; canonical files still must not contain secret values.
@@ -95,10 +101,12 @@ Without using the current conversation, answer from the new files:
 2. Which accepted decisions govern it?
 3. What is the next human gate?
 4. Where is the exact task-relevant procedure or resource?
-5. Is any job currently running, and what independent evidence supports that tense?
+5. Is any job queued/running or any service running/healthy, and what independent,
+   fresh evidence supports each tense?
 
 If the files cannot answer the first four, fix the owning records. If question 5
-cannot be live-verified, record `unknown` or “last observed,” never “running.”
+cannot be live-verified, record `unknown` or “last observed” with freshness, never a
+timeless `running`/`healthy` claim.
 
 ### 7. Checkpoint and commit
 

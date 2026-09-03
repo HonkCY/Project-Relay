@@ -10,16 +10,25 @@ The common record and type-specific fields are defined by the
 - **Authority:** provisional
 - **Provenance:** live-environment
 - **Verification:** verified
-- **Purpose:** version the v0.1 protocol, template, migration kit, and example
+- **Purpose/claim:** version the v0.1 protocol, template, migration kit, and example
 - **Locator:** repository root (`.`)
-- **Role:** canonical source
-- **Inputs:** authoritative design brief
-- **Outputs:** public-safe Markdown design artifacts
-- **Version/run:** current Git `HEAD` plus any visible working-tree changes
-- **Status:** active
-- **Evidence ref:** `git status --short --branch`
+- **Role:** source
+- **Important contents:** protocol, templates, migration kit, acceptance scenarios,
+  and the sanitized Coastwatch fixture
+- **Inputs / outputs / dependencies:** authoritative design brief → public-safe
+  Markdown design artifacts; no runtime dependency
+- **Readers/writers:** humans and agents read; repository maintainers write through
+  reviewed Git changes
+- **Producer procedure:** implementation and P-001 review at the named Git boundary
+- **Access:** local filesystem and Git; no secret required
+- **Version/run:** v0.1 design boundary identified by annotated tag `v0.1-design`
+- **Status or last observation:** active design repository; human review pending
+- **Evidence ref:** `git status --short --branch`; [v0.1 validation](../docs/validation.md)
+- **Checked by:** Codex implementation agent
 - **Checked at:** 2026-09-03
-- **Risks:** the repository has not yet passed human review
+- **Valid until / recheck rule:** recheck after the release tag, branch, or working tree changes
+- **Owner:** repository maintainer
+- **Risks/limitations:** the repository has not yet passed human review
 
 ## Tools
 

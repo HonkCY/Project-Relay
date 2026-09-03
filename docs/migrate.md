@@ -5,10 +5,9 @@ truth is partly latent in native conversations, agent memory, tools, repositorie
 remote systems, services, or jobs. It does not use provider export as a dependency.
 The incumbent agent is a migration operator and witness, never automatic authority.
 
-Copy the three files from `migration-kit/` into `.relay/migration/`. During migration
-they form the canonical audit dossier. After cutover they become read-only supporting
-provenance; ongoing truth moves to the normal decision, system, procedure, and state
-owners.
+During migration, the three `migration-kit/` files form the canonical audit dossier.
+After cutover they become read-only supporting provenance; ongoing truth moves to the
+normal decision, record, procedure, and state owners.
 
 ## Tracks and success
 
@@ -21,10 +20,41 @@ Every audit surface belongs to one track:
   that an item is operationally critical.
 
 Migration never claims “100%” without a real, enumerated denominator. Coverage is a
-table of surfaces and dispositions, summarized as counts of operational blockers,
-supporting partials, and open forensic items.
+table of surfaces and dispositions, summarized as total and unresolved operational
+critical rows, supporting partials, and open forensic items.
 
-## Phase 0 — Open the run and set a watermark
+## Phase 0 — Prepare the target, open the run, and set a watermark
+
+MIGRATE must first create a usable destination; it does not assume Relay already
+exists. The target may be the incumbent repository or a new folder.
+
+1. Inspect the target's branch, working tree, existing adapters, ignore rules, and
+   any `.relay/` directory. Preserve unrelated or uncommitted work.
+2. Initialize Git if absent.
+3. Copy `template/.relay/` only when no Relay workspace exists. Merge the thin
+   `AGENTS.md`, `CLAUDE.md`, and ignore patterns using INIT steps 1–3; never overwrite
+   existing instructions blindly.
+4. Choose an empty active-dossier path. Use `.relay/migration/` for a first run. If
+   that path already exists, inspect its migration ID. Resume a same-ID in-progress
+   dossier in place without recopying; never resume or edit a frozen dossier. For a
+   different or completed run, choose a new empty ID-scoped path such as
+   `.relay/migrations/<migration-id>/`. Copy `migration-kit/AUDIT.md`, `COVERAGE.md`,
+   and `CUTOVER.md` only into the newly chosen empty path, then replace run-boundary
+   placeholders before linking it from canonical state.
+5. As the final Phase-0 write, set target `STATE.md` to “migration in progress,”
+   background execution `unknown`, and next human gate “operational cutover.” Its
+   active-work entry MUST link the actual `AUDIT.md`, `COVERAGE.md`, and `CUTOVER.md`
+   paths selected in step 4, making the in-progress dossier recoverable after a
+   switch or compaction. It must not claim incumbent state yet.
+
+These are shared scaffolding mechanics, not INIT eligibility or completion. The
+incumbent project/environment remains the live operational workspace until cutover;
+the incumbent agent remains only operator and witness, never authority.
+
+At cutover, activate the already-tested candidate projection, remove STATE's
+in-progress dossier links, and keep its normalized D/R/P links and frontier. The
+frozen dossier remains reachable through migration-provenance links from those
+records; it never becomes an unindexed second source of live truth.
 
 Record migration ID, incumbent project and agent, operator, start time, audit horizon,
 source branch/commit/dirty state, and intended target workspace. The watermark says
@@ -105,10 +135,12 @@ make observed state `running`.
 ### Jobs
 
 Capture execution mechanism, host/scheduler, real process/job/run ID, exact command
-or specification, working directory and revision, inputs, outputs/logs, submit/start
-times, observed state and timestamp, check command/result/evidence, output validation,
-owner, next human gate, and recovery. If an identifier or live check is missing,
-record `planned`, `absent`, `last observed`, or `unknown` as evidence permits.
+or specification reference, working directory and revision, inputs, outputs/logs,
+submit/start times, observed state and timestamp, check command/result/evidence,
+output validation, owner, next human gate, and recovery. Recurring work also records
+the scheduler/automation entry, schedule, next-run evidence, and disable procedure.
+If an identifier or live check is missing, record a verified absence, `planned`, or
+“current state unknown; last observed …” as evidence permits.
 
 ### Procedures, dependencies, and secrets
 
@@ -118,10 +150,11 @@ location, and authorized acquisition process; never copy values into canonical f
 
 ## Phase 3 — Extract candidate claims
 
-Each consequential claim in `AUDIT.md` contains:
+Each consequential interpretive, recalled, conflicting, or otherwise transformed
+claim normalized through `AUDIT.md` contains:
 
 - claim ID and exact statement;
-- impact and operational/forensic track;
+- criticality and operational/forensic track;
 - authority (`provisional` initially);
 - provenance basis at claim level;
 - verification result at claim level;
@@ -131,7 +164,10 @@ Each consequential claim in `AUDIT.md` contains:
 - conflict/unknown link and disposition.
 
 Mixed-source records keep claim-level evidence. One live check must not upgrade an
-entire remembered narrative.
+entire remembered narrative. A directly observed resource, environment, tool, or
+exact-procedure field MAY normalize from a named `SRC` observation without a
+redundant `MC` entry when no interpretation, normative choice, or transformation
+occurs; its destination record still links that source as migration provenance.
 
 ## Phase 4 — Corroborate and resolve conflicts
 
@@ -148,15 +184,25 @@ that mismatch is operational drift requiring human disposition.
 
 Promote only disposed claims:
 
-- current frontier and next gate to `STATE.md`;
+- current frontier and next gate to a candidate projection in `STATE.md`;
 - normative choices to `DECISIONS.md`;
 - resources/tools/services/jobs, unknowns, and lineage to `RECORDS.md`;
 - exact operations to `PROCEDURES.md`.
 
-Link promoted records back to migration claim/evidence IDs. Recollection-only claims
-remain provisional unless an authorized human explicitly accepts the residual risk.
-Avoid copying the audit narrative into canonical files; each fact has one ongoing
-owner.
+Until cutover, that snapshot MUST say `migration candidate — not cut over`, identify
+the incumbent project/environment as the live operational workspace, state that the
+incumbent agent remains only operator/witness, name `operational cutover` as the
+current migration gate, and retain links to the active dossier. In a separately
+labelled candidate projection it exposes the proposed post-cutover frontier, active
+work, and next operational human gate for testing without prematurely declaring the
+destination authoritative.
+
+Link every normalized destination back to its migration `MC`, `CF`, `U`, or direct
+`SRC` evidence ID. When more than one dossier exists, use a path-qualified Markdown
+backlink (or migration-ID-namespaced identifier) so a bare `SRC-001` cannot refer to
+two runs. Recollection-only claims remain provisional unless an authorized human
+explicitly accepts the residual risk. Avoid copying the audit narrative into
+canonical files; each fact has one ongoing owner.
 
 ## Phase 6 — Delta sweep
 
@@ -165,22 +211,42 @@ migration: branch and dirty state, recent material conversations, active jobs,
 service health, remote outputs, and human decisions. Update the watermark, coverage,
 and canonical records. A migration that ignores known drift cannot pass cutover.
 
+Inspect the resulting diff and commit a clean candidate boundary. This commit
+contains the normalized D/R/P owners and the explicitly non-cutover candidate STATE;
+it is the exact boundary tested in Phase 7.
+
 ## Phase 7 — Fresh-agent dry run
 
-Start a genuinely fresh native-agent session with no bespoke handoff explanation.
-It must recover frontier, active work, governing accepted decisions, next human gate,
-critical resources/procedures, and truthful current or unknown job/service state.
+Start a genuinely fresh native-agent session from the clean candidate commit, with no
+bespoke handoff explanation. It must recover the candidate frontier, active work,
+governing accepted decisions, proposed post-cutover next human gate, critical
+resources/procedures, and truthful current or unknown job/service state. It must also
+report that cutover has not occurred, `operational cutover` is the current migration
+gate, the incumbent project/environment remains live, and the incumbent agent is only
+operator/witness.
 
-Test one safe task-relevant operation or verification. Record agent, start condition,
-questions asked, records read, answers, discrepancies, and pass/fail in `CUTOVER.md`.
+Test one safe task-relevant operation or verification. Record the exact candidate
+commit, agent, start condition, questions asked, records read, answers, discrepancies,
+and pass/fail in `CUTOVER.md`. If the run exposes a material defect, correct its owner,
+repeat the delta sweep, commit a new candidate, and rerun Phase 7.
 
 ## Phase 8 — Operational cutover
 
+After a fresh-agent run passes, commit its dossier evidence as an immutable
+pre-cutover review boundary. This evidence commit MUST NOT change material
+operational truth from the candidate that was tested; if it does, return to Phase 6
+and rerun. Obtain the resulting commit hash; the human reviews exactly that boundary.
+
 Cutover passes only when:
 
-- every required domain has an inventory scope and no operational-critical surface
+- every required domain has an inventory scope and no operational/critical surface
   remains `not-attempted`;
-- every operational-critical item has a disposition;
+- every coverage row obeys the access/result/disposition state matrix; inaccessible
+  evidence never becomes `pass` or `n/a`;
+- no operational coverage row remains `pending` or `backlog`, and no coverage row
+  remains `blocked`;
+- no forensic coverage row remains `pending`; each open forensic row is a named
+  backlog entry with owner, value, next action, and recheck condition;
 - no unresolved critical unknown or conflict permits unsafe continuation;
 - frontier, active work, decisions, next gate, and required procedures are canonical;
 - critical remote resources are locatable with enough lineage and access references;
@@ -193,12 +259,23 @@ Human risk acceptance is not a magic bypass for an unsafe operational blocker. T
 operator must resolve it, impose a safe constraint/workaround, or have the human
 explicitly reclassify its impact with rationale.
 
-Record approver, time, and cutover commit after that commit exists. Do not place a
-future self-referential hash inside the commit. From cutover onward, the old project,
-chat, and memory are non-canonical witnesses.
+If the human rejects the boundary or requires changes, record that disposition but
+keep the dossier active and do not cut over, freeze, or tag. Correct the owning
+records, return to Phase 6, create a new candidate, and rerun Phase 7. Only an
+approved boundary proceeds below.
+
+On acceptance, change STATE from candidate to active canonical state and remove its
+live active-dossier links; provenance backlinks keep the frozen dossier reachable.
+Record approver, time, the reviewed pre-cutover commit, and the intended cutover-tag
+name in `CUTOVER.md`. Commit only that cutover transition, then create the named
+annotated tag at the decision commit. The tag identifies the transition without a
+self-referential hash in the commit. From cutover onward, the old native-agent project
+context, chat, and memory are non-canonical witnesses; the underlying target
+repository and external systems retain exactly the authority recorded in D/R owners.
 
 ## Phase 9 — Forensic continuation
 
-Move open non-blocking history to the forensic backlog with owner, value, and recheck
-condition. If later evidence makes an item operational, reclassify it and surface it
-in `STATE.md`; never leave a newly critical gap hidden behind the prior cutover.
+Continue the already-disposed forensic backlog without mutating the frozen migration
+dossier. Record later evidence in normal canonical owners or a dated migration
+addendum. If later evidence makes an item operational, reclassify it and surface it in
+`STATE.md`; never leave a newly critical gap hidden behind the prior cutover.

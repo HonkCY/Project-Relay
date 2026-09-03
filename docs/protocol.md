@@ -55,17 +55,25 @@ A single edited-in-place view containing:
 - next human gate;
 - links to governing decisions;
 - urgent blockers, conflicts, and unknowns;
-- an explicit background-execution summary.
+- an explicit background-execution safety summary derived from linked job, service,
+  scheduler, and automation records.
 
 It SHOULD fit on one screen or a few hundred lines at most. Historical narrative
 belongs in records or Git history.
+
+The snapshot MAY project a short safety conclusion or next action from linked
+records (for example, “no job can currently be called running”). It MUST NOT copy the
+underlying observed status, runtime ID, timestamp, or procedure; the linked R/P owner
+remains the only source for those fields.
 
 ### 2. Record
 
 A stable-ID entry for a decision or operational entity. Resources, datasets,
 artifacts, environments, repositories, remote hosts, tools, MCPs, services, and jobs
-are record kinds, not separate databases. Unknown is a valid field value and may
-also be a record when the blind spot itself must be tracked.
+are represented as records, not separate databases. The canonical `Kind` vocabulary
+is the template enum: datasets/artifacts map to `asset` or `resource`, remote hosts to
+`host`, and MCPs to `tool`. Unknown is a valid field value and may also be a record
+when the blind spot itself must be tracked.
 
 Decision records live separately from system records because they have different
 review and retrieval patterns, not because they use a different epistemology.
@@ -75,6 +83,14 @@ review and retrieval patterns, not because they use a different epistemology.
 A stable-ID runbook or contract containing prerequisites, exact steps, outputs,
 verification, and recovery. A prose claim that work is reproducible is not a
 procedure.
+
+A procedure also records authority, provenance, verification, evidence reference,
+checker/time, owner, last-tested time, applicable record/version scope, and accepting
+human/time when authority is `accepted`.
+
+If recovered prose lacks exact steps, outputs, verification, or recovery, it is not a
+procedure yet. Track it as an `unknown` record with an owner and safe constraint until
+the missing runbook can be verified; do not give incomplete instructions a P ID.
 
 ## Authority, provenance, and verification
 
@@ -132,23 +148,35 @@ MUST NOT become accepted during migration.
 For normative choices, the newest explicitly accepted, non-superseded decision
 governs. For descriptive facts, the freshest relevant checkable evidence governs
 the report. A conflict between the two is visible drift, not permission to rewrite
-history. If evidence cannot settle a consequential conflict, status is `unresolved`
-or provenance is `unknown` and the next human gate MUST expose it.
+history. If evidence cannot settle a consequential conflict, authority is
+`unresolved` and/or verification is `unverified` or `inaccessible`; the next human
+gate MUST expose it.
 
 ## Record requirements
 
-Every record has:
+Every D or R entry shares this evidence envelope:
 
 - stable ID and concise title;
 - kind;
 - authority;
 - provenance;
 - verification;
-- purpose or claim;
 - safe evidence reference;
-- checked-at timestamp or date;
-- status and risk/unknown when relevant;
-- relationships to inputs, outputs, dependencies, successor, or superseded record.
+- checker identity and checked-at timestamp/date;
+- accepting human and time when authority is `accepted`.
+
+A D entry additionally owns the exact normative decision, a supersedes/superseded-by
+link or `none`, and concise rationale or rejected alternatives when operationally
+useful. It does not need operational status, freshness, or dependency fields.
+
+Every operational R entry additionally has:
+
+- purpose or claim;
+- status or last observation (use `not-applicable` when genuinely static);
+- valid-until time or explicit recheck rule (`not-applicable` when genuinely static);
+- owner;
+- relationships to inputs, outputs, dependencies, successor, or superseded record;
+- risks/limitations (`none` only after an explicit check).
 
 Type-specific minimums follow.
 
@@ -166,6 +194,12 @@ Record identity, purpose, required/optional status, dependent project functions,
 important capabilities used, configuration locator, authentication or secret class
 without values, and replacement/recovery notes.
 
+### Unknowns and blind spots
+
+Record the exact unknown, operational impact, safe constraint/workaround, owner, next
+action, and event/time that should trigger recheck. An `unknown` record makes a gap
+operable; it does not turn the missing fact into evidence.
+
 ### Services
 
 Record purpose, host/location, endpoint or port when safe, source/config locator,
@@ -174,8 +208,9 @@ procedure, logs, persistent state, operational risks, and last verified state.
 
 ### Jobs and truthful background state
 
-A job uses one of `planned`, `queued`, `running`, `blocked`, `succeeded`, `failed`,
-`cancelled`, or `unknown`. `planned` is never running.
+A job's timestamped `last observation` uses one of `planned`, `queued`, `running`,
+`blocked`, `succeeded`, `failed`, `cancelled`, `absent`, or `unknown`. This is never a
+timeless status. `planned` is never running.
 
 `queued` or `running` requires all of:
 
@@ -189,8 +224,9 @@ A job uses one of `planned`, `queued`, `running`, `blocked`, `succeeded`, `faile
 
 After evidence expires, an agent says “last observed running at …; current state
 unknown” until it rechecks. A chat statement, plan, checkpoint, or word “wait” is not
-execution evidence. Scheduled work also requires a real scheduler/automation ID and
-next-run evidence. Relay never implies a conversational agent will wake itself.
+execution evidence. Scheduled work also requires a real scheduler/automation ID,
+schedule, next-run evidence, and disable procedure. Relay never implies a
+conversational agent will wake itself.
 
 ## BOOTSTRAP
 
@@ -235,9 +271,13 @@ Before a planned switch, the current agent applies the materiality test and writ
 back any unrecorded material state. The user exits and opens the other native agent
 in the same folder. The new agent bootstraps normally; no handoff prompt is needed.
 
-If the previous agent vanished, the new one uses the last durable canonical state,
-inspects the working tree and external evidence, and marks work not represented in
-canonical files as uncertain. It does not reconstruct the missing interval as fact.
+## RECOVER
+
+After a crash, compaction, or vanished agent, run BOOTSTRAP again. Use the last saved
+canonical state, including visible uncommitted canonical edits that may be newer than
+`HEAD`; preserve unrelated dirty work. Recheck task-relevant external evidence and
+mark any unrepresented interval uncertain. Never reconstruct chat-only work as fact.
+Write newly verified recovery facts to their owning records and checkpoint normally.
 
 ## VERIFY
 
@@ -254,8 +294,9 @@ Verification is a record update, not merely a conversational assurance:
 INIT creates Relay for a new or already self-contained project. MIGRATE reconstructs
 an operational project from an incumbent native-agent context and external systems.
 They have separate protocols: [INIT](init.md) and [MIGRATE](migrate.md). Any material
-latent chat/memory, inaccessible history, remote state, service, or job moves the
-task to MIGRATE.
+latent chat/memory, inaccessible history, or unexternalized/uncertain remote state,
+service, or job moves the task to MIGRATE. A new project with explicitly supplied,
+verifiable external resources may use INIT.
 
 ## Git semantics
 
