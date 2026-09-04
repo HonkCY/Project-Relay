@@ -69,6 +69,26 @@ This addendum does not rewrite the tagged status table above.
 Because A and B are independent, B's pass does not offset A's failure. The current
 frontier and human gate are owned by [canonical STATE](../.relay/STATE.md).
 
+## Post-tag bounded-retrieval remediation addendum — 2026-09-04
+
+The original A failure above remains unchanged. The smallest bounded-retrieval
+correction was applied without changing `docs/acceptance-tests.md`, the D/R/P object
+model, or registry structure. The final public-safe run record is
+[R-003 bounded-retrieval remediation evidence](../.relay/evidence/native-ab-remediation-2026-09-04/README.md).
+
+| Scenario | Final candidate result | Disposition |
+| --- | --- | --- |
+| A — fresh bootstrap | **pass** | Fresh Claude Code Opus and Codex sessions recovered every required semantic result from their native adapter plus START/STATE, then stopped without opening a D/R/P registry, README, migration material, or evidence archive. |
+| B — Claude → Codex → Claude | **pass** | After A passed, three new native sessions reran the sentinel transition from the final candidate's template boundary and preserved `alpha = 0.037`, filter → normalize → aggregate, exact bytes, epistemic authority, and a clean linear transition. |
+
+Both results apply to remediation candidate `b7097c4`; the evidence record identifies
+the exact tree/blob boundary and reconstructable B commits. The passing A result shows
+that the monolithic registry structure is not a systematic over-read constraint for
+this prompt, so no stable-ID sharding was implemented.
+
+This addendum advances the candidate to human review only. D-002–D-004 remain
+provisional, and `v0.1-design` remains the unchanged historical design checkpoint.
+
 ## Reproduction notes
 
 The validation used read-only checks equivalent to:

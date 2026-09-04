@@ -82,6 +82,52 @@ The common record and type-specific fields are defined by the
   before/after checks proved the clone clean; that harness issue is distinct from A's
   independently observed retrieval failure
 
+## R-003 — Bounded-retrieval remediation evidence
+
+- **Kind:** asset
+- **Authority:** provisional
+- **Provenance:** live-environment + durable-artifact
+- **Verification:** verified
+- **Purpose/claim:** records the bounded-retrieval remediation iterations, final
+  native Scenario A pass, and required final Scenario B regression pass at one
+  candidate boundary
+- **Locator:**
+  [`.relay/evidence/native-ab-remediation-2026-09-04/README.md`](evidence/native-ab-remediation-2026-09-04/README.md)
+  with reconstructable final B format patches below that directory
+- **Role:** archive
+- **Important contents:** unchanged prompts and rubric boundary, product/model
+  versions, native START/STATE discovery, exact files/IDs/sections read, semantic
+  answers, failed and passing remediation candidates, final transition commits,
+  hashes, unrelated-read checks, and external verdicts
+- **Inputs / outputs / dependencies:** P-001, `docs/acceptance-tests.md`, and R-002's
+  immutable prior failure; updates the STATE review gate but does not change
+  D-001–D-005 authority
+- **Readers/writers:** repository reviewers read; a later acceptance run creates a
+  new dated evidence record rather than rewriting this observation
+- **Producer procedure:** P-001 native A/B subset, run
+  `2026-09-04-native-ab-remediation`
+- **Access:** tracked public-safe Markdown and text patches; no secret required
+- **Version/run:** final remediation candidate
+  `b7097c4741f5f9084f053d7a096415048f51f29c`; first checkpoint containing this
+  R record owns the publication boundary without a self-referential hash
+- **Status or last observation:** Scenario A passed in fresh Claude Code Opus and
+  Codex sessions without any unrelated registry, migration, or evidence reads;
+  Scenario B passed a fresh Claude Code Opus → Codex → Claude Code Opus regression
+  at the same candidate boundary
+- **Evidence ref:** the locator above; final B chain `a9ecf1e` → `4108b17` →
+  `a16dbe4` → `b02bcbe`; external clean-tree, hash, immutable-input, canonical
+  verification-consistency, and unchanged
+  acceptance-specification checks
+- **Checked by:** Codex acceptance harness with real native Claude Code and Codex CLIs
+- **Checked at:** 2026-09-04T06:27:57Z
+- **Valid until / recheck rule:** immutable observation; rerun A and then B after a
+  later change to bootstrap/retrieval semantics
+- **Owner:** repository maintainer
+- **Risks/limitations:** raw CLI event streams remain in the invoking task rather
+  than Git; the checked-in summary preserves review facts and reconstructable B
+  transitions. This result advances a human gate only and does not accept provisional
+  design decisions
+
 ## Tools
 
 No MCP server, connector, or optional external tool is required to read or use the

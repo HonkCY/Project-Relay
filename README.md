@@ -90,5 +90,6 @@ scheduler, service, or agent run that can be independently checked.
 The [canonical repository state](.relay/STATE.md) owns the live checkpoint, review
 gate, and known risks. This README's static version label is the v0.1 protocol design;
 the [tagged validation record](docs/validation.md) preserves the pre-run v0.1 boundary,
-while [R-002](.relay/RECORDS.md#r-002--native-a-b-acceptance-evidence) owns the latest
-post-tag native A/B results.
+while [R-002](.relay/RECORDS.md#r-002--native-a-b-acceptance-evidence) preserves the
+initial native A failure and [R-003](.relay/RECORDS.md#r-003--bounded-retrieval-remediation-evidence)
+owns the latest post-remediation A/B results.

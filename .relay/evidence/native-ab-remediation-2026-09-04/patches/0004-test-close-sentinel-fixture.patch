@@ -1,0 +1,34 @@
+From b02bcbe55c64a1125f3b5e0d3845f029b4a0d59b Mon Sep 17 00:00:00 2001
+From: Native acceptance session <native-session@example.invalid>
+Date: Fri, 4 Sep 2026 06:24:42 +0000
+Subject: [PATCH 4/4] test: close sentinel fixture
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+---
+ .relay/STATE.md | 11 +++++------
+ 1 file changed, 5 insertions(+), 6 deletions(-)
+
+diff --git a/.relay/STATE.md b/.relay/STATE.md
+index 026af6a..e875a12 100644
+--- a/.relay/STATE.md
++++ b/.relay/STATE.md
+@@ -1,11 +1,10 @@
+ # Current state
+ 
+-- **Frontier:** sentinel artifact independently verified; final folder audit pending.
+-- **Active work:** execute P-002 Phase 3 — a second fresh Claude session closes the
+-  folder run and audits the canonical state without modifying
+-  [R-002](RECORDS.md#r-002--derived-cohort-summary).
+-- **Next human gate:** after all three native sessions, the repository maintainer
+-  reviews the external prompts, transcripts, diffs, and commits and assigns pass/fail.
++- **Frontier:** three-session transition executed; external verdict pending.
++- **Active work:** none.
++- **Next human gate:** the repository maintainer reviews the captured evidence —
++  external prompts, transcripts, diffs, and the three commits — and assigns
++  pass/fail.
+ 
+ ## Accepted governing decisions
+ 
+-- 
+2.49.0
+

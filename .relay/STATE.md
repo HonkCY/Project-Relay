@@ -1,11 +1,11 @@
 # Current state
 
-- **Frontier:** real native acceptance gate A/B has run against the v0.1 design:
-  B passed; A recovered the correct state but failed its bounded-retrieval criterion.
-- **Active work:** inspect [R-002 native A/B evidence](RECORDS.md#r-002--native-a-b-acceptance-evidence)
-  and decide the smallest retrieval correction before rerunning A.
-- **Next human gate:** review the A failure disposition and B pass, then authorize or
-  revise the A remediation/retest boundary.
+- **Frontier:** bounded-retrieval remediation is complete; real fresh native A and
+  the required post-remediation B regression both pass at candidate `b7097c4`.
+- **Active work:** human review of the remediation diff and
+  [R-003 acceptance evidence](RECORDS.md#r-003--bounded-retrieval-remediation-evidence).
+- **Next human gate:** the repository maintainer accepts or revises the remediation
+  candidate. This gate does not itself accept D-002–D-004 or authorize a release tag.
 
 ## Accepted governing decisions
 
@@ -21,11 +21,11 @@
 ## Immediate risks and unknowns
 
 - Human acceptance of the proposed v0.1 design is pending.
-- Scenario A does not pass yet: both native agents read beyond the task-relevant owner
-  set even though their reported frontier, decisions, gate, and unknowns were correct.
-- Scenario B passed a real Claude Code Opus → Codex → Claude Code Opus transition.
-  See [R-002](RECORDS.md#r-002--native-a-b-acceptance-evidence) for the exact evidence
-  boundary. Other native-agent platforms remain outside v0.1 scope.
+- [R-002](RECORDS.md#r-002--native-a-b-acceptance-evidence) preserves the original
+  Scenario A bounded-retrieval failure and the pre-remediation B pass.
+- [R-003](RECORDS.md#r-003--bounded-retrieval-remediation-evidence) records the final
+  A pass and the required B rerun pass at the same remediation candidate. Other
+  native-agent platforms remain outside v0.1 scope.
 
 ## Background execution
 

@@ -6,11 +6,13 @@
 - **Provenance:** durable-artifact
 - **Verification:** unverified
 - **Evidence ref:** `docs/acceptance-tests.md`; [v0.1 internal validation](../docs/validation.md);
-  [R-002 native A/B evidence](RECORDS.md#r-002--native-a-b-acceptance-evidence)
-- **Checked by/at:** Codex acceptance harness / 2026-09-04T05:01:16Z
+  [R-002 native A/B evidence](RECORDS.md#r-002--native-a-b-acceptance-evidence);
+  [R-003 remediation evidence](RECORDS.md#r-003--bounded-retrieval-remediation-evidence)
+- **Checked by/at:** Codex acceptance harness / 2026-09-04T06:27:57Z
 - **Owner:** repository maintainer
-- **Last tested:** real native A/B subset on 2026-09-04 — B passed; A failed bounded
-  retrieval after semantically correct bootstrap; C–I were not rerun
+- **Last tested:** real native A/B subset on 2026-09-04 — final A and B both passed
+  at candidate `b7097c4` after bounded-retrieval remediation; R-002 preserves the
+  earlier A failure; C–I were not rerun
 - **Applies to:** D-002 through D-005 and all v0.1 acceptance scenarios
 
 ### Preconditions and inputs

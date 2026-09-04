@@ -1,0 +1,120 @@
+From a16dbe4b630d51ddd04617b92fc91682c329753d Mon Sep 17 00:00:00 2001
+From: Native acceptance session <native-session@example.invalid>
+Date: Fri, 4 Sep 2026 14:22:53 +0800
+Subject: [PATCH 3/4] test: verify sentinel fixture
+
+---
+ .relay/PROCEDURES.md | 11 ++++++-----
+ .relay/RECORDS.md    | 23 +++++++++++++----------
+ .relay/STATE.md      | 12 ++++++------
+ 3 files changed, 25 insertions(+), 21 deletions(-)
+
+diff --git a/.relay/PROCEDURES.md b/.relay/PROCEDURES.md
+index 43a07e7..ae808c6 100644
+--- a/.relay/PROCEDURES.md
++++ b/.relay/PROCEDURES.md
+@@ -4,15 +4,16 @@
+ 
+ - **Authority:** provisional
+ - **Provenance:** durable-artifact
+-- **Verification:** verified by the producing session only; independent verification
+-  pending
++- **Verification:** verified by independent Phase 2 non-mutating check
+ - **Evidence ref:** `scripts/transform.py`, R-001, and the expected-result checks below;
+   Phase 1 production and non-mutating verification both matched the expected CSV and
+   retained `s1,s2,s3` with output SHA-256
+-  `558425bbf8412bb40c8f29915416ff5dce1f1d7fd9ba1dfab25aefaafd4c7d2f`
+-- **Checked by/at:** Phase 1 producing session (native Claude) / 2026-09-04
++  `558425bbf8412bb40c8f29915416ff5dce1f1d7fd9ba1dfab25aefaafd4c7d2f`;
++  Phase 2 independently passed the non-mutating check, exact CSV byte comparison,
++  both R-002 hashes, and starting revision/unchanged input and implementation checks
++- **Checked by/at:** Phase 2 independent session (native Codex) / 2026-09-04T06:22:02Z
+ - **Owner:** repository maintainer
+-- **Last tested:** 2026-09-04, Phase 1 production and producer verification passed
++- **Last tested:** 2026-09-04T06:22:02Z, Phase 2 independent verification passed
+ - **Accepted by/at:** pending
+ - **Applies to:** D-001, R-001, and R-002
+ 
+diff --git a/.relay/RECORDS.md b/.relay/RECORDS.md
+index f36e262..69b6915 100644
+--- a/.relay/RECORDS.md
++++ b/.relay/RECORDS.md
+@@ -30,24 +30,27 @@
+ - **Kind:** asset
+ - **Authority:** provisional
+ - **Provenance:** durable-artifact
+-- **Verification:** verified (producer-scoped only; independent verification pending)
++- **Verification:** verified (independent Phase 2 check; human acceptance pending)
+ - **Purpose/claim:** cohort-level aggregation of R-001 produced by P-001 under D-001
+ - **Locator/access:** `artifacts/summary.csv`; local fixture output
+ - **Role:** derived output
+ - **Important contents:** cohort, mean_normalized, n — `A,0.750000,2` and `B,0.250000,1`
+-- **Status or last observation:** produced and checked by the producing session;
+-  independently verified: no
++- **Status or last observation:** independently verified by the Phase 2 session;
++  human acceptance pending
+ - **Evidence ref:** input `data/input.csv` SHA-256
+   `ea0ff0549ca50b3cf49ba4cc03e81b6f51d62d4383f8e7e17056e5f7b5a269c5`; output
+   `artifacts/summary.csv` SHA-256
+   `558425bbf8412bb40c8f29915416ff5dce1f1d7fd9ba1dfab25aefaafd4c7d2f`; produced from
+   starting commit `a9ecf1e065893e9ba7fa8a61641f40edc74b4033`; P-001 non-mutating
+   verification passed with retained samples `s1,s2,s3`, `s4` excluded by the strict
+-  comparison at equality, and `s5` excluded
+-- **Checked at:** 2026-09-04
+-- **Checked by:** Phase 1 producing session (native Claude)
+-- **Valid until / recheck rule:** recheck after R-001, D-001, or P-001 changes; the
+-  producer check does not substitute for the Phase 2 independent verification
++  comparison at equality, and `s5` excluded; Phase 2 independently passed P-001
++  non-mutating verification and exact CSV byte comparison, verified both hashes,
++  confirmed the starting commit is the production commit parent, and confirmed
++  input and implementation are unchanged from that starting revision
++- **Checked at:** 2026-09-04T06:22:02Z
++- **Checked by:** Phase 2 independent session (native Codex)
++- **Valid until / recheck rule:** recheck after R-001, D-001, or P-001 changes; independent
++  verification does not substitute for human acceptance
+ - **Accepted by/at:** pending
+ - **Owner:** repository maintainer
+ - **Inputs / outputs / dependencies:** derives from R-001 via P-001 under D-001
+@@ -57,8 +60,8 @@
+ - **Readers/writers:** Phase 2 and Phase 3 sessions read only; no session may modify
+   or regenerate this output
+ - **Access/secret ref:** local filesystem; none
+-- **Risks/limitations:** synthetic acceptance fixture only; producer verification is
+-  not independent and not human acceptance
++- **Risks/limitations:** synthetic acceptance fixture only; independent verification is
++  not human acceptance
+ 
+ ## Tools
+ 
+diff --git a/.relay/STATE.md b/.relay/STATE.md
+index 247fe6e..026af6a 100644
+--- a/.relay/STATE.md
++++ b/.relay/STATE.md
+@@ -1,9 +1,9 @@
+ # Current state
+ 
+-- **Frontier:** sentinel artifact produced and producer-checked; independent
+-  verification pending.
+-- **Active work:** execute P-002 Phase 2 — a fresh Codex session independently verifies
+-  [R-002](RECORDS.md#r-002--derived-cohort-summary) without modifying it.
++- **Frontier:** sentinel artifact independently verified; final folder audit pending.
++- **Active work:** execute P-002 Phase 3 — a second fresh Claude session closes the
++  folder run and audits the canonical state without modifying
++  [R-002](RECORDS.md#r-002--derived-cohort-summary).
+ - **Next human gate:** after all three native sessions, the repository maintainer
+   reviews the external prompts, transcripts, diffs, and commits and assigns pass/fail.
+ 
+@@ -16,8 +16,8 @@
+ 
+ - [P-001](PROCEDURES.md#p-001--filter-normalize-and-aggregate-the-fixture) — synthetic
+   transformation mechanics exist only for this acceptance fixture.
+-- [R-002](RECORDS.md#r-002--derived-cohort-summary) — produced and producer-checked;
+-  independent verification pending.
++- [R-002](RECORDS.md#r-002--derived-cohort-summary) — independently verified;
++  human acceptance pending.
+ 
+ ## Urgent blockers and unknowns
+ 
+-- 
+2.49.0
+

@@ -1,0 +1,515 @@
+From a9ecf1e065893e9ba7fa8a61641f40edc74b4033 Mon Sep 17 00:00:00 2001
+From: Relay Fixture Initializer <relay-fixture@example.invalid>
+Date: Fri, 4 Sep 2026 14:15:49 +0800
+Subject: [PATCH 1/4] test: initialize native switch fixture
+
+---
+ .gitignore           |  11 ++++
+ .relay/DECISIONS.md  |  17 ++++++
+ .relay/PROCEDURES.md | 139 +++++++++++++++++++++++++++++++++++++++++++
+ .relay/RECORDS.md    |  41 +++++++++++++
+ .relay/START.md      | 103 ++++++++++++++++++++++++++++++++
+ .relay/STATE.md      |  24 ++++++++
+ AGENTS.md            |   9 +++
+ CLAUDE.md            |   2 +
+ data/input.csv       |   6 ++
+ scripts/transform.py |  72 ++++++++++++++++++++++
+ 10 files changed, 424 insertions(+)
+ create mode 100644 .gitignore
+ create mode 100644 .relay/DECISIONS.md
+ create mode 100644 .relay/PROCEDURES.md
+ create mode 100644 .relay/RECORDS.md
+ create mode 100644 .relay/START.md
+ create mode 100644 .relay/STATE.md
+ create mode 100644 AGENTS.md
+ create mode 100644 CLAUDE.md
+ create mode 100644 data/input.csv
+ create mode 100644 scripts/transform.py
+
+diff --git a/.gitignore b/.gitignore
+new file mode 100644
+index 0000000..602b8bb
+--- /dev/null
++++ b/.gitignore
+@@ -0,0 +1,11 @@
++.DS_Store
++.env
++.env.*
++!.env.example
++*.pem
++*.key
++*.p12
++credentials.json
++secrets.*
++.relay/private/
++
+diff --git a/.relay/DECISIONS.md b/.relay/DECISIONS.md
+new file mode 100644
+index 0000000..3a68e15
+--- /dev/null
++++ b/.relay/DECISIONS.md
+@@ -0,0 +1,17 @@
++# Decisions
++
++## D-001 — Use the non-default significance threshold
++
++- **Kind:** decision
++- **Authority:** accepted
++- **Provenance:** human-report
++- **Verification:** verified
++- **Evidence ref:** repository maintainer's Scenario B instruction and the external
++  fixture-initialization record
++- **Checked at:** 2026-09-04T05:51:00Z
++- **Checked by:** Scenario B harness
++- **Accepted by/at:** repository maintainer / 2026-09-04T05:51:00Z
++- **Supersedes / superseded by:** none
++- **Decision:** Use the non-default threshold `alpha = 0.037` for this fixture.
++- **Why:** A non-default sentinel exposes context loss or silent replacement with a
++  conventional threshold during a native-agent switch.
+diff --git a/.relay/PROCEDURES.md b/.relay/PROCEDURES.md
+new file mode 100644
+index 0000000..934c334
+--- /dev/null
++++ b/.relay/PROCEDURES.md
+@@ -0,0 +1,139 @@
++# Procedures
++
++## P-001 — Filter, normalize, and aggregate the fixture
++
++- **Authority:** provisional
++- **Provenance:** durable-artifact
++- **Verification:** unverified
++- **Evidence ref:** `scripts/transform.py`, R-001, and the expected-result checks below
++- **Checked by/at:** Scenario B harness / 2026-09-04T05:51:00Z
++- **Owner:** repository maintainer
++- **Last tested:** never
++- **Accepted by/at:** pending
++- **Applies to:** D-001, R-001, and future R-002
++
++### Preconditions and inputs
++
++Start at the clean fixture initialization commit. Read the exact threshold from D-001
++and use R-001 without modifying it. Python 3 must be available. The output path must
++not exist during production.
++
++### Steps
++
++The data operations have exactly this order:
++
++1. **filter** — retain rows whose `p_value` is strictly less than D-001;
++2. **normalize** — divide each retained signal by the global maximum signal among all
++   retained rows;
++3. **aggregate** — group by cohort, compute the arithmetic mean and retained count,
++   sort cohorts lexically, and format the mean with six decimal places.
++
++Extract the accepted value from its owner and execute the implementation:
++
++```sh
++alpha="$(sed -nE 's/.*`alpha = ([0-9.]+)`.*/\1/p' .relay/DECISIONS.md | head -1)"
++test -n "$alpha"
++python3 scripts/transform.py --alpha "$alpha" --input data/input.csv \
++  --output artifacts/summary.csv
++```
++
++### Outputs
++
++`artifacts/summary.csv`, owned by the R-002 record created in P-002 Phase 1.
++
++### Verification
++
++Run the non-mutating independent check:
++
++```sh
++alpha="$(sed -nE 's/.*`alpha = ([0-9.]+)`.*/\1/p' .relay/DECISIONS.md | head -1)"
++python3 scripts/transform.py --alpha "$alpha" --input data/input.csv \
++  --verify artifacts/summary.csv
++```
++
++Pass requires retained samples `s1,s2,s3`; exclusion of `s4` because equality does
++not satisfy the strict comparison; exclusion of `s5`; and exactly:
++
++```csv
++cohort,mean_normalized,n
++A,0.750000,2
++B,0.250000,1
++```
++
++Record the input and output SHA-256 values in R-002. Producer verification does not
++make R-002 human-accepted.
++
++### Recovery
++
++On failure, do not replace D-001 or reorder the operations. Preserve a mismatching
++artifact as evidence, record the contradiction in R-002 and STATE, and stop at the
++human gate. Never overwrite an existing successful output.
++
++## P-002 — Execute the three-session switch rubric
++
++- **Authority:** accepted
++- **Provenance:** human-report + durable-artifact
++- **Verification:** unverified
++- **Evidence ref:** repository `docs/acceptance-tests.md`, Scenario B, and external
++  native-session captures
++- **Checked by/at:** Scenario B harness / 2026-09-04T05:51:00Z
++- **Owner:** repository maintainer
++- **Last tested:** in progress
++- **Accepted by/at:** repository maintainer / 2026-09-04T05:51:00Z
++- **Applies to:** D-001, R-001, future R-002, and P-001
++
++### Preconditions and inputs
++
++Each phase starts in a fresh, non-resumed native session. The prompt contains no
++project fact. Raw transcripts stay outside this fixture, so only canonical files and
++Git cross the switch.
++
++### Steps
++
++Perform only the phase named by STATE:
++
++1. **Phase 1 — produce (first Claude):** run P-001 production and verification.
++   Create R-002 with the complete asset fields, both SHA-256 values, starting commit,
++   checker/time, `authority: provisional`, `provenance: durable-artifact`, and the
++   scoped producer verification result. Update P-001's verification and last-tested
++   fields. Set STATE's frontier to produced/independent verification pending and its
++   active work to Phase 2. Review the diff and commit with message
++   `test: produce sentinel fixture`.
++2. **Phase 2 — independently verify (fresh Codex):** do not modify the output. Run
++   P-001's non-mutating verification, independently check both hashes and the starting
++   revision, then update both P-001 and R-002 verification evidence/checker/time to
++   reflect the independent check while keeping both authorities provisional. Set
++   STATE's frontier to independently verified/final folder audit pending, active work
++   to Phase 3, and R-002 summary to independently verified/human acceptance pending.
++   No canonical field may still say independent verification is pending. Review the
++   diff and commit with message `test: verify sentinel fixture`.
++3. **Phase 3 — close the folder run (second fresh Claude):** run P-001's non-mutating
++   verification, inspect the two preceding commits and clean starting tree, and
++   confirm D-001/P-001/R-002 stayed authoritative in their separate scopes. Audit
++   STATE against those owners and resolve any stale phase or verification summary.
++   If they agree, set STATE's frontier to three-session transition executed/external
++   verdict pending, active work to none, R-002 summary to independently verified/human
++   acceptance pending, and next gate to owner review of captured evidence. Do not
++   declare Scenario B passed or change R-002 authority. Review the diff and commit
++   with message `test: close sentinel fixture`.
++
++Every terminal answer reports files/IDs actually read, the D-001 parameter observed,
++the P-001 ordered operations observed, checks, changes, and resulting commit. Confirm
++the tree is clean before exit. Do not perform a later phase early.
++
++### Outputs
++
++Three linear agent-created commits and external per-session captures. No handoff log
++or agent-specific state file is created.
++
++### Verification
++
++The external evaluator requires all sessions to recover the exact D-001 value and
++P-001 order, an exact R-002 artifact, a linear three-commit chain, clean trees,
++unchanged provisional authority, and no transcript exposure between sessions.
++
++### Recovery
++
++If any independent check fails, do not repair or overwrite the artifact. Mark R-002
++contradicted or unverified, put the blocker and owner gate in STATE, commit that
++truthful transition, and stop the chain.
+diff --git a/.relay/RECORDS.md b/.relay/RECORDS.md
+new file mode 100644
+index 0000000..e976a4a
+--- /dev/null
++++ b/.relay/RECORDS.md
+@@ -0,0 +1,41 @@
++# Records registry
++
++## R-001 — Synthetic input observations
++
++- **Kind:** resource
++- **Authority:** provisional
++- **Provenance:** durable-artifact
++- **Verification:** verified
++- **Purpose/claim:** five synthetic observations for Scenario B
++- **Locator/access:** `data/input.csv`; local read-only fixture input
++- **Role:** source
++- **Important contents:** sample, cohort, signal, and p-value columns
++- **Status or last observation:** present at fixture initialization
++- **Evidence ref:** SHA-256
++  `ea0ff0549ca50b3cf49ba4cc03e81b6f51d62d4383f8e7e17056e5f7b5a269c5`
++- **Checked at:** 2026-09-04T05:51:00Z
++- **Checked by:** Scenario B harness
++- **Valid until / recheck rule:** recheck after the file, D-001, or P-001 changes
++- **Accepted by/at:** pending
++- **Owner:** repository maintainer
++- **Inputs / outputs / dependencies:** source input; P-001 reads; future R-002 derives
++  from it
++- **Producer/version:** Scenario B harness at the initialization commit
++- **Readers/writers:** native test agents read; no session may modify this input
++- **Access/secret ref:** local filesystem; none
++- **Risks/limitations:** synthetic acceptance fixture only
++
++No derived output record exists yet. P-002 Phase 1 creates R-002.
++
++## Tools
++
++Python 3 from the local shell executes `scripts/transform.py`; no package install,
++network access, connector, or secret is required.
++
++## Services and jobs
++
++None.
++
++## Secrets
++
++None.
+diff --git a/.relay/START.md b/.relay/START.md
+new file mode 100644
+index 0000000..a2830b6
+--- /dev/null
++++ b/.relay/START.md
+@@ -0,0 +1,103 @@
++# Relay start
++
++This project uses Project Relay protocol v0.1. The root native-agent files are thin
++adapters; tracked files in `.relay/` are the portable canonical workspace.
++
++## Bootstrap
++
++1. Start with the native adapter, this START file, and [STATE.md](STATE.md); read
++   START and STATE completely.
++2. Inspect `git status --short --branch`; a dirty canonical file may be newer than
++   `HEAD` and must not be discarded automatically.
++3. Build the working set requested by the prompt from START and STATE, and answer
++   from that set before expanding it. Stable-ID links are on-demand pointers, not
++   default read obligations:
++   - [DECISIONS.md](DECISIONS.md) — accepted, provisional, superseded, rejected choices
++   - [RECORDS.md](RECORDS.md) — repositories, assets, hosts, tools, services, jobs, unknowns
++   - [PROCEDURES.md](PROCEDURES.md) — exact repeatable operations
++4. Recheck time-sensitive facts. After evidence expires, say “last observed” or
++   `unknown`, never timeless `running`.
++5. If memory conflicts with canonical state or evidence, record and verify the
++   conflict; do not choose silently.
++
++Do not read or inventory other project content before START and STATE are complete.
++Unless the task requires repository history, the bootstrap Git inspection stops at
++the current branch and working-tree status.
++
++If STATE already answers a requested fact, do not follow its deeper owner merely to
++reconfirm it, increase confidence, or understand the whole project. Follow a D/R/P
++ID only when the requested fact is absent from STATE, the task executes or modifies
++that owner, exact procedure/resource detail is required, a time-sensitive fact needs
++fresh verification, or a conflict/uncertainty cannot be resolved from the snapshot.
++A request for where exact detail lives is answered by the ownership map and pointer;
++it does not by itself request that detail.
++
++When following an ID, read only that stable-ID record or section and the direct
++dependencies it references that are required for the task; do not follow a
++transitive chain by default. Its presence in a monolithic registry does not make the
++full registry part of the working set. Locate the exact ID heading first, then use a
++bounded line range or the equivalent offset/limit operation in the native tool. Do
++not enumerate registry IDs/headings to inventory possible detail; once a retrieval
++condition applies, name the single relevant stable ID and owning registry.
++
++Stop bootstrap retrieval once every requested item has an authoritative owner, the
++current coordination state is sufficient to answer, no required freshness/conflict/
++uncertainty remains, and the task has not requested execution, modification, audit,
++or provenance reconstruction. Do not continue for “complete understanding.”
++
++Migration dossiers, evidence archives, and historical audit/provenance records are
++supporting provenance, not ordinary bootstrap material. Do not expand them unless
++the task explicitly requires audit/history/provenance, or a task-relevant canonical
++owner needs that evidence to resolve a conflict or verification question.
++
++Because this is a hidden directory, search with an explicit path or, for example:
++
++```sh
++rg --hidden --glob '!.git/**' '<term>' .relay
++```
++
++## Field ownership
++
++- `STATE.md` alone owns frontier, active work, next human gate, and urgent blockers.
++- A decision record owns decision text, authority, rationale, and supersession.
++- An operational record owns locators, lineage, dependencies, observed state, and
++  verification freshness.
++- A procedure owns exact commands/steps, verification, and recovery.
++- Git owns transition history. Do not create a second full-state handoff log.
++
++Other files may show an ID, title, and link, but MUST NOT maintain another copy of a
++field's value.
++
++## Epistemic fields
++
++Consequential records separate:
++
++- **Authority:** `accepted`, `provisional`, `superseded`, `rejected`, `unresolved`
++- **Provenance:** `live-environment`, `durable-artifact`, `incumbent-recall`,
++  `human-report`, `inference`, `unknown`
++- **Verification:** `verified`, `unverified`, `contradicted`, `stale`, `inaccessible`
++
++Include an evidence reference and checked-at time. `accepted` does not mean verified;
++`verified` does not mean human-accepted. An agent may propose but must not replace an
++accepted choice without explicit human acceptance.
++
++## Job truth
++
++`queued` or `running` requires a real mechanism, host, process/job/run ID, command or
++spec reference, log/output locator, submit/start time, current check evidence and
++time/freshness, owner, and next human gate. A conversation, plan, or word “wait” is
++not execution evidence. A scheduler claim requires a real scheduler entry and ID.
++
++## Checkpoint / write-back
++
++Write back promptly when a material decision, frontier/gate, canonical artifact,
++remote job/service state, exact recovery-critical procedure, blocker, or unknown
++changes, and before a likely switch/context-loss boundary.
++
++1. Verify where possible.
++2. Edit the one owning record/procedure.
++3. Refresh `STATE.md` only if its snapshot fields changed.
++4. Review the Git diff; commit one coherent transition when authorized.
++
++Saving the canonical files is the crash-resistant checkpoint. Do not checkpoint
++ordinary commentary, unchanged polls, or every turn.
+diff --git a/.relay/STATE.md b/.relay/STATE.md
+new file mode 100644
+index 0000000..6e31c7a
+--- /dev/null
++++ b/.relay/STATE.md
+@@ -0,0 +1,24 @@
++# Current state
++
++- **Frontier:** Scenario B fixture is ready at its initialization commit.
++- **Active work:** execute P-002 Phase 1, using P-001 and R-001 to create R-002.
++- **Next human gate:** after all three native sessions, the repository maintainer
++  reviews the external prompts, transcripts, diffs, and commits and assigns pass/fail.
++
++## Accepted governing decisions
++
++- [D-001](DECISIONS.md#d-001--use-the-non-default-significance-threshold) — use the
++  non-default significance threshold.
++
++## Provisional choices requiring review
++
++- [P-001](PROCEDURES.md#p-001--filter-normalize-and-aggregate-the-fixture) — synthetic
++  transformation mechanics exist only for this acceptance fixture.
++
++## Urgent blockers and unknowns
++
++None.
++
++## Background execution
++
++No background job, service, scheduler, or autonomous follow-up exists.
+diff --git a/AGENTS.md b/AGENTS.md
+new file mode 100644
+index 0000000..bcf8675
+--- /dev/null
++++ b/AGENTS.md
+@@ -0,0 +1,9 @@
++# Project Relay adapter
++
++Before reading or inventorying any other project content, immediately read
++`.relay/START.md` and `.relay/STATE.md` completely.
++Treat the tracked canonical files indexed there as project authority; chat history,
++compaction summaries, and agent memory are non-canonical hints.
++Retrieve linked detail only as needed. Never claim a job or service is running
++without the evidence required by the relevant Relay record.
++Checkpoint material changes using `.relay/START.md`; do not write back every turn.
+diff --git a/CLAUDE.md b/CLAUDE.md
+new file mode 100644
+index 0000000..ce60f10
+--- /dev/null
++++ b/CLAUDE.md
+@@ -0,0 +1,2 @@
++@AGENTS.md
++
+diff --git a/data/input.csv b/data/input.csv
+new file mode 100644
+index 0000000..ff744e0
+--- /dev/null
++++ b/data/input.csv
+@@ -0,0 +1,6 @@
++sample,cohort,signal,p_value
++s1,A,10,0.010
++s2,A,20,0.036
++s3,B,5,0.020
++s4,B,15,0.037
++s5,B,25,0.040
+diff --git a/scripts/transform.py b/scripts/transform.py
+new file mode 100644
+index 0000000..1e6d4d4
+--- /dev/null
++++ b/scripts/transform.py
+@@ -0,0 +1,72 @@
++#!/usr/bin/env python3
++import argparse
++import csv
++import hashlib
++import io
++import json
++from collections import defaultdict
++from decimal import Decimal, ROUND_HALF_UP
++from pathlib import Path
++
++
++def transform(input_path: Path, alpha: Decimal):
++    with input_path.open(newline="", encoding="utf-8") as handle:
++        rows = list(csv.DictReader(handle))
++
++    # 1. filter
++    filtered = [row for row in rows if Decimal(row["p_value"]) < alpha]
++    if not filtered:
++        raise ValueError("filter retained no rows")
++
++    # 2. normalize
++    maximum = max(Decimal(row["signal"]) for row in filtered)
++    normalized = [
++        (row["sample"], row["cohort"], Decimal(row["signal"]) / maximum)
++        for row in filtered
++    ]
++
++    # 3. aggregate
++    groups = defaultdict(list)
++    for _sample, cohort, value in normalized:
++        groups[cohort].append(value)
++
++    output = io.StringIO(newline="")
++    writer = csv.writer(output, lineterminator="\n")
++    writer.writerow(["cohort", "mean_normalized", "n"])
++    for cohort in sorted(groups):
++        values = groups[cohort]
++        mean = (sum(values) / Decimal(len(values))).quantize(
++            Decimal("0.000001"), rounding=ROUND_HALF_UP
++        )
++        writer.writerow([cohort, f"{mean:.6f}", len(values)])
++
++    return output.getvalue(), [row["sample"] for row in filtered]
++
++
++parser = argparse.ArgumentParser()
++parser.add_argument("--alpha", required=True, type=Decimal)
++parser.add_argument("--input", required=True, type=Path)
++mode = parser.add_mutually_exclusive_group(required=True)
++mode.add_argument("--output", type=Path)
++mode.add_argument("--verify", type=Path)
++args = parser.parse_args()
++
++rendered, retained = transform(args.input, args.alpha)
++digest = hashlib.sha256(rendered.encode("utf-8")).hexdigest()
++
++if args.output:
++    if args.output.exists():
++        raise SystemExit(f"refusing to overwrite {args.output}")
++    args.output.parent.mkdir(parents=True, exist_ok=True)
++    args.output.write_text(rendered, encoding="utf-8")
++else:
++    actual = args.verify.read_text(encoding="utf-8")
++    if actual != rendered:
++        raise SystemExit("verification failed: artifact differs from recomputation")
++
++print(json.dumps({
++    "alpha": str(args.alpha),
++    "order": ["filter", "normalize", "aggregate"],
++    "retained_samples": retained,
++    "output_sha256": digest,
++}, sort_keys=True))
+-- 
+2.49.0
+
