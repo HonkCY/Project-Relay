@@ -1,10 +1,10 @@
 # v0.1 validation record
 
 This record describes the repository-level checks performed for the immutable
-`v0.1-design` checkpoint and, in a separately labeled addendum, later native A/B
-evidence. The outcome remains **ready for human design review**, not a claim that
-Project Relay is production-certified or that every acceptance scenario has run
-against real external systems.
+`v0.1-design` checkpoint and, in separately labeled addenda, later native A/B
+evidence and the final v0.1 seal. Project Relay v0.1 is accepted and sealed; this is
+not a claim that it is production-certified or that every acceptance scenario has
+run against real external systems.
 
 ## Boundary and environment
 
@@ -71,9 +71,10 @@ frontier and human gate are owned by [canonical STATE](../.relay/STATE.md).
 
 ## Post-tag bounded-retrieval remediation addendum — 2026-09-04
 
-The original A failure above remains unchanged. The smallest bounded-retrieval
-correction was applied without changing `docs/acceptance-tests.md`, the D/R/P object
-model, or registry structure. The final public-safe run record is
+The original A failure above remains unchanged. At the tested remediation candidate,
+the smallest bounded-retrieval correction was applied without changing the Scenario
+A prompt or substantive pass/fail criteria, the D/R/P object model, or registry
+structure. The final public-safe run record is
 [R-003 bounded-retrieval remediation evidence](../.relay/evidence/native-ab-remediation-2026-09-04/README.md).
 
 | Scenario | Final candidate result | Disposition |
@@ -88,6 +89,22 @@ this prompt, so no stable-ID sharding was implemented.
 
 This addendum advances the candidate to human review only. D-002–D-004 remain
 provisional, and `v0.1-design` remains the unchanged historical design checkpoint.
+
+## Final v0.1 seal — 2026-09-04
+
+The project owner accepted the final Scenario A pass, the final post-remediation
+Scenario B regression pass, and D-002–D-004. Before sealing, Scenario A prose was
+clarified to treat linked stable IDs as authoritative on-demand pointers and to
+follow only task-required owners. The exact prompt, semantic expectations,
+substantive bounded-retrieval failure condition, and recorded R-002/R-003 runs did
+not change. No native A/B rerun was required for this wording-only reconciliation.
+
+Final deterministic checks cover Markdown links and anchors, stable-ID/schema
+structure, migration matrices, shell examples, template bootstrap and ignore rules,
+public-content safety, Git diff integrity, and `git fsck --full`. All passed at the
+final seal boundary. The annotated `v0.1` tag identifies that boundary;
+`v0.1-design` remains the immutable historical checkpoint at
+`18c6c216b8f574e5c436968e4e5032797983dee0`.
 
 ## Reproduction notes
 

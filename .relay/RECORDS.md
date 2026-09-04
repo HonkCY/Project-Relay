@@ -25,23 +25,28 @@ The common record and type-specific fields are defined by the
 - **Access:** local filesystem and Git; public HTTPS reads require no secret.
   Publishing uses the maintainer's externally managed GitHub authentication;
   credential values are not stored in Relay
-- **Version/run:** v0.1 design boundary identified by annotated tag `v0.1-design`
-- **Status or last observation:** active design repository; v0.1 design checkpoint
-  published to `origin`; human review pending. The initial atomic push created
-  `main` and annotated tag `v0.1-design`. At the observation below, remote `main`
-  and the peeled tag both resolved to
-  `18c6c216b8f574e5c436968e4e5032797983dee0`, before this publication-metadata
-  checkpoint. The design tag remains fixed while `main` may advance
+- **Version/run:** final v0.1 seal boundary identified by annotated tag `v0.1`;
+  annotated tag `v0.1-design` remains the fixed historical design boundary
+- **Status or last observation:** final human review passed and v0.1 is sealed at the
+  final annotated tag. The initial atomic publication created `main` and annotated
+  tag `v0.1-design`. At that historical observation, remote `main` and the peeled tag
+  both resolved to
+  `18c6c216b8f574e5c436968e4e5032797983dee0`, before the later
+  publication-metadata and acceptance checkpoints. The design tag remains fixed
+  while `main` may advance
 - **Evidence ref:** successful
   `git push --atomic --set-upstream origin main refs/tags/v0.1-design`;
   `git ls-remote origin refs/heads/main refs/tags/v0.1-design 'refs/tags/v0.1-design^{}'`;
+  final owner decision on 2026-09-04;
+  [R-003 final native acceptance evidence](RECORDS.md#r-003--bounded-retrieval-remediation-evidence);
   [v0.1 validation](../docs/validation.md)
-- **Checked by:** Codex publication agent
-- **Checked at:** 2026-09-04T04:22:11Z
-- **Valid until / recheck rule:** this is a historical publication observation;
-  verify the remote URL, branch, and release tag before the next publication or handoff
+- **Checked by:** Codex release seal agent
+- **Checked at:** 2026-09-04T06:52:48Z
+- **Valid until / recheck rule:** the final `v0.1` and historical `v0.1-design` tags
+  are immutable boundaries; verify remote refs after publication
 - **Owner:** repository maintainer
-- **Risks/limitations:** the repository has not yet passed human review
+- **Risks/limitations:** other native-agent platforms remain outside v0.1 scope; no
+  unresolved v0.1 design-review blocker remains
 
 ## R-002 — Native A-B acceptance evidence
 
@@ -85,9 +90,10 @@ The common record and type-specific fields are defined by the
 ## R-003 — Bounded-retrieval remediation evidence
 
 - **Kind:** asset
-- **Authority:** provisional
+- **Authority:** accepted
 - **Provenance:** live-environment + durable-artifact
 - **Verification:** verified
+- **Accepted by/at:** project owner through final human review / 2026-09-04
 - **Purpose/claim:** records the bounded-retrieval remediation iterations, final
   native Scenario A pass, and required final Scenario B regression pass at one
   candidate boundary

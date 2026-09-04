@@ -87,9 +87,9 @@ scheduler, service, or agent run that can be independently checked.
 
 ## Status
 
-The [canonical repository state](.relay/STATE.md) owns the live checkpoint, review
-gate, and known risks. This README's static version label is the v0.1 protocol design;
-the [tagged validation record](docs/validation.md) preserves the pre-run v0.1 boundary,
-while [R-002](.relay/RECORDS.md#r-002--native-a-b-acceptance-evidence) preserves the
-initial native A failure and [R-003](.relay/RECORDS.md#r-003--bounded-retrieval-remediation-evidence)
-owns the latest post-remediation A/B results.
+Project Relay v0.1 is accepted and sealed at the annotated `v0.1` tag. The
+[canonical repository state](.relay/STATE.md) owns the closed checkpoint and scope.
+The historical `v0.1-design` tag remains fixed; [R-002](.relay/RECORDS.md#r-002--native-a-b-acceptance-evidence)
+preserves the initial native A failure, and accepted
+[R-003](.relay/RECORDS.md#r-003--bounded-retrieval-remediation-evidence) owns the final
+post-remediation A/B results.

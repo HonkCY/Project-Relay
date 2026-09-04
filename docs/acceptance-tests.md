@@ -19,7 +19,8 @@ frontier, active work, accepted governing decisions, next human gate, urgent
 unknowns, and where exact procedures and resources live.”
 
 **Then:** Without hints, the agent discovers the native adapter, reads START and
-STATE, and follows the linked IDs. It reports:
+STATE, uses linked stable IDs as authoritative on-demand pointers, and follows only
+those required by the task. It reports:
 
 - S-14 disposition as the frontier and manual R-005 review as active work;
 - D-001 and D-004 as accepted, while D-003 remains provisional;
@@ -28,8 +29,9 @@ STATE, and follows the linked IDs. It reports:
 - R-011 as forensic rather than an operational blocker.
 
 **Evidence:** Record the files/IDs the agent says it read and map every answer to one
-owner. Fail if it needs chat context, misses an owner, promotes D-003, or imports the
-whole corpus without task need.
+owner. Fail if it needs chat context, misses an owner, promotes D-003, follows a
+linked ID without task need, or imports the whole corpus or broadly inventories a
+registry without task need.
 
 ## B — Claude → Codex → Claude switch
 
@@ -190,4 +192,3 @@ A–I are independent. One failure is not averaged away. A protocol release may 
 real native-switch tests pending, but it must not claim those tests passed. Production
 migration cutover additionally requires the project-specific operational gate in
 `migration-kit/CUTOVER.md`.
-
