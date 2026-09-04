@@ -63,6 +63,14 @@ Domain rows do not prove domain coverage if several material sources exist. Expa
 for example, accessible conversations into one row per thread or bounded thread set,
 and remote infrastructure into rows with defensible scope.
 
+The incumbent native-session snapshot is forensic evidence attached to its existing
+conversation/session `SRC` note and coverage row, not a second coverage denominator.
+Record `captured`, `partial`, `unavailable`, or `inaccessible` snapshot provenance in
+`AUDIT.md`. Snapshot availability does not upgrade or downgrade the semantic result
+of conversation enumeration, inspection, extraction, or normalization. If a capture
+limitation also prevents required inspection, represent that actual inspection gap
+with this table's normal access/result/disposition fields and a linked `U` entry.
+
 ## Defensible roll-up
 
 - **Operational critical rows (total):** `<count and IDs>`

@@ -85,6 +85,15 @@ surface in these required domains:
 available listing/navigation, then record the scope used. It does not mean claiming
 inaccessible or undiscoverable history was read. Add those as blind spots.
 
+For the incumbent session itself, inventory the native filesystem surface before
+interpreting transcript content. Claude Code uses the literal
+`CLAUDE_CODE_SESSION_ID`; Codex uses a non-empty `CODEX_THREAD_ID`, falling back to
+`CODEX_SESSION_ID` only when the thread variable is absent. Record the identity
+source, exact ID, configured native search boundary, and the related conversation or
+session coverage row. Never infer the incumbent from modification time, “latest”
+JSONL, or another session. A missing, unreadable, or ambiguous exact match is an
+explicit limitation, not permission to substitute a conversation.
+
 For every surface, record track, criticality, access result, inspection evidence,
 gap, and disposition. `not-attempted` is distinct from `inaccessible`.
 
@@ -97,6 +106,58 @@ conversation-only exact procedures, unresolved loops, referenced artifacts, and
 operationally important rationale. Record a stable source locator when the product
 exposes one; otherwise describe the bounded source and limitation. Do not paste
 sensitive transcripts into a public workspace.
+
+Before substantial extraction, attempt one lossless private snapshot of the exact
+incumbent native session when its filesystem storage is accessible:
+
+- Claude Code searches only
+  `${CLAUDE_CONFIG_DIR:-$HOME/.claude}/projects/**/<CLAUDE_CODE_SESSION_ID>.jsonl`.
+  Alongside the exact primary JSONL, it may copy regular files below only the exact
+  adjacent `<session-id>/` directory, such as `tool-results/` and `subagents/`.
+- Codex searches only `${CODEX_HOME:-$HOME/.codex}/sessions/**/` for the current
+  native basename form `rollout-YYYY-MM-DDTHH-MM-SS-<id>.jsonl`, then compares the
+  parsed terminal `<id>` with the selected thread/session identity above. An
+  unrecognized future filename format is `unavailable`; it does not relax into a
+  suffix or recency guess.
+
+Require one exact regular-file match. Do not follow nested symlinks, copy special
+files, recurse into siblings, or inspect transcript content merely to identify the
+session. Preserve bytes without semantic rewriting. Write only below
+`.relay/private/migrations/<migration-id>/native-sessions/<harness>/<native-id>/`
+at restrictive local permissions, after verifying the destination is ignored and no
+`.relay/private/` path is tracked. A deterministic rerun replaces that one ID-scoped
+snapshot instead of appending timestamped copies; an unavailable refresh preserves
+the last successful snapshot.
+
+The optional standard-library helper in
+[`migration-kit/capture-native-session.py`](../migration-kit/capture-native-session.py)
+implements these bounds. Invoke it from a Project Relay checkout, naming the target
+workspace explicitly when it is a different folder:
+
+```sh
+python3 migration-kit/capture-native-session.py \
+  --harness claude-code \
+  --migration-id 2026-09-05-project \
+  --repo-root /path/to/target-workspace
+```
+
+Use `--harness codex` for Codex. The helper returns metadata only and does not parse
+or print transcript content. Handled outcomes are `captured`, `partial`,
+`unavailable`, and `inaccessible`; missing or ambiguous identity matches are handled
+outcomes rather than newest-file fallbacks. An equivalent native copy operation may
+be used when Python is unavailable, but it MUST enforce the same identity, path,
+symlink, byte-preservation, privacy, digest, and refresh rules.
+
+Attach the result to the existing conversation/session `SRC` note and coverage row.
+Record the harness, identity source and ID, safe original locator, private snapshot
+locator, captured-through watermark, bounded surface/file count, bytes, primary
+SHA-256, private-manifest SHA-256, result, and limitations. Keep absolute local paths,
+companion per-file names, and raw bytes in the private manifest. A snapshot proves
+only which bytes were copied; it does not verify the transcript's claims, replace
+conversation enumeration or extraction, or change authority. Because the incumbent
+session is still live, always say “native session snapshot captured through
+`<timestamp>`,” not “final” or “complete.” A platform SessionEnd hook may be
+considered later, but is not a migration dependency.
 
 ### Instructions and memory
 
@@ -211,6 +272,14 @@ migration: branch and dirty state, recent material conversations, active jobs,
 service health, remote outputs, and human decisions. Update the watermark, coverage,
 and canonical records. A migration that ignores known drift cannot pass cutover.
 
+Rerun the exact-ID native-session capture into the same deterministic private
+destination. Record the Phase-6 attempt, refreshed captured-through watermark,
+bounded surface, bytes and digests in the same `SRC` provenance entry and in the
+`CUTOVER.md` delta row. If the exact source has become unavailable or inaccessible,
+record that result and limitation without replacing a prior successful snapshot or
+guessing another session. This refresh narrows the live-session tail; it does not
+claim to include writes made after its watermark.
+
 Inspect the resulting diff and commit a clean candidate boundary. This commit
 contains the normalized D/R/P owners and the explicitly non-cutover candidate STATE;
 it is the exact boundary tested in Phase 7.
@@ -229,6 +298,10 @@ Test one safe task-relevant operation or verification. Record the exact candidat
 commit, agent, start condition, questions asked, records read, answers, discrepancies,
 and pass/fail in `CUTOVER.md`. If the run exposes a material defect, correct its owner,
 repeat the delta sweep, commit a new candidate, and rerun Phase 7.
+
+The dry run MUST succeed when `.relay/private/` is absent. It MUST NOT ingest or
+require a native transcript snapshot; only tracked canonical owners and their safe
+supporting provenance are portable.
 
 ## Phase 8 — Operational cutover
 

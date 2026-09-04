@@ -42,6 +42,14 @@ not canonical by itself. Large or sensitive evidence stays external and is named
 a safe locator. `.relay/private/` is ignored by the default template and MUST NOT be
 treated as portable canonical state.
 
+An exact native-session transcript copied during MIGRATE is private forensic
+evidence only. It MAY support a later re-audit of migration extraction, but it never
+owns project truth, changes a claim's authority or verification by itself, or becomes
+a bootstrap, recovery, cutover, or runtime dependency. Its absence from a clone MUST
+NOT impair normal Relay operation. Capture provenance belongs to the existing
+migration source note; raw bytes and detailed private paths stay under
+`.relay/private/`.
+
 ## Canonical object model
 
 Relay uses three objects. The distinction is semantic, not one-file-per-type.

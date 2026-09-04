@@ -43,6 +43,22 @@ are not self-explanatory.
 - **Evidence/output refs:** `<safe locators; no secrets or raw private transcript>`
 - **Limitations:** `<none or exact limitation>`
 
+When this source includes the incumbent native session, append its snapshot
+provenance here rather than creating a canonical object. Raw bytes, absolute local
+paths, and per-file names stay in the ignored private manifest. Use safe tracked
+locators and preserve both the initial attempt and Phase-6 refresh:
+
+| Attempt | Harness | Identity source / exact ID | Safe original locator | Private snapshot locator | Captured-through watermark | Bounded surface / files / bytes | Primary SHA-256 | Private-manifest SHA-256 | Result | Limitations |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| initial | `<claude-code | codex>` | `<environment variable / ID>` | `<safe native-root wildcard locator; exact absolute path remains private>` | `.relay/private/migrations/<migration-id>/native-sessions/<harness>/<ID>/` | `<ISO-8601 or none>` | `<exact primary plus bounded associated artifacts; counts/bytes>` | `<digest or none>` | `<digest or none>` | `<captured | partial | unavailable | inaccessible>` | `<live-session tail, ambiguity, access failure, skipped entries, or none>` |
+| Phase-6 refresh | `<same harness>` | `<same identity source / ID>` | `<same safe locator or updated exact result>` | `<same deterministic private locator>` | `<ISO-8601 or prior successful watermark>` | `<refreshed counts/bytes or no capture>` | `<digest or prior retained digest>` | `<digest or prior retained digest>` | `<captured | partial | unavailable | inaccessible>` | `<including whether a prior successful snapshot was preserved>` |
+
+`captured` means the identified bounded surface was copied as observed at that
+watermark, not that the still-live session is closed or semantically complete. A
+snapshot or digest does not promote authority or verification. If exact identity is
+missing, has zero or multiple matches, or cannot be read safely, record the honest
+result and a `U` entry when the limitation affects migration coverage.
+
 ## Candidate claims
 
 All claims begin provisional. Use claim-level provenance and verification; do not

@@ -22,6 +22,7 @@ boundary; `COVERAGE.md` remains the owner of per-surface state.
 | --- | --- | --- | --- | --- | --- |
 | Git branch/commit/dirty state | `<check>` | `<identity/time>` | `<ref>` | `<none/change>` | `<ID/path>` |
 | Recent material conversations | `<check>` | `<identity/time>` | `<ref>` | `<none/change>` | `<ID/path>` |
+| Incumbent native-session snapshot | `<exact-ID refresh into the same private destination>` | `<identity/time>` | `<SRC result/watermark/bytes/digests>` | `<refreshed/partial/unavailable/inaccessible; prior snapshot retained?>` | `<same SRC note; never STATE/D/R/P>` |
 | Active/pending/recurring jobs | `<check>` | `<identity/time>` | `<ref>` | `<none/change>` | `<R ID/path>` |
 | Service health/deploy state | `<check>` | `<identity/time>` | `<ref>` | `<none/change>` | `<R ID/path>` |
 | Remote outputs/resources | `<check>` | `<identity/time>` | `<ref>` | `<none/change>` | `<R ID/path>` |

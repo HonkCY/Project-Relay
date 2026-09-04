@@ -192,3 +192,44 @@ A–I are independent. One failure is not averaged away. A protocol release may 
 real native-switch tests pending, but it must not claim those tests passed. Production
 migration cutover additionally requires the project-specific operational gate in
 `migration-kit/CUTOVER.md`.
+
+## Post-v0.1 MIGRATE enhancement — native-session forensic snapshot
+
+This bounded conformance check is additive. It does not modify the sealed A–I rubric
+or historical native A/B evidence.
+
+**Given:** A temporary target Git workspace ignores `.relay/private/`. Synthetic
+Claude Code and Codex native-storage roots contain an exact incumbent transcript,
+newer and similarly named decoys, and, for Claude Code, an exact adjacent session
+directory with bounded artifacts. Additional cases omit the exact transcript, make
+it ambiguous, use a custom `CODEX_HOME`, and expose a symlinked artifact.
+
+**When:** Run `migration-kit/capture-native-session.py` once in the early migration
+phase and again as a Phase-6 refresh, using only `CLAUDE_CODE_SESSION_ID` or the Codex
+`CODEX_THREAD_ID`-then-`CODEX_SESSION_ID` precedence.
+
+**Then:** The helper copies the exact primary bytes and only bounded regular
+associated artifacts, never selects by recency, never follows a symlink, hashes the
+snapshot bytes, records a live-session watermark and limitation, and refreshes one
+stable ID-scoped private destination. A zero or ambiguous match records
+`unavailable`; an unsafe/unreadable match records `inaccessible`; neither substitutes
+another session. A failed refresh preserves the last successful snapshot.
+
+The private path is ignored and untracked, source content and modification time are
+unchanged, and deleting `.relay/private/` leaves START/STATE bootstrap intact.
+Tracked dossier fields contain metadata only; raw transcript content and detailed
+private file paths remain private. Fresh-agent continuation never depends on the
+snapshot.
+
+**Evidence:** Run:
+
+```sh
+python3 -m unittest discover -s tests -v
+git check-ignore -v .relay/private/migrations/probe/native-sessions/codex/probe
+git ls-files -- .relay/private
+```
+
+Fail on a wrong-session selection, transcript rewriting, unbounded companion copy,
+symlink traversal, digest mismatch, timestamped duplicate accumulation, loss of a
+prior good snapshot after a failed refresh, tracked private output, or any bootstrap
+dependency on `.relay/private/`.

@@ -123,3 +123,49 @@ The temporary template smoke-test directory was outside the repository and is no
 part of the checkpoint. Reviewers should execute the complete Given/When/Then
 procedures in [acceptance tests](acceptance-tests.md), recording product versions,
 exact prompts, source boundary, and outputs.
+
+## Post-v0.1 MIGRATE native-session snapshot addendum — 2026-09-05
+
+This separately scoped main-branch candidate adds local forensic insurance to
+MIGRATE without changing the sealed `v0.1` tag, native A/B evidence, canonical object
+model, or fresh-agent bootstrap. The raw snapshot stays Git-ignored and private; the
+tracked dossier retains only safe `SRC` provenance and Phase-6 refresh metadata.
+
+- **Host tools:** Python 3.14.2 standard library, Git 2.49.0, Bash 3.2.57
+- **Implementation:** `migration-kit/capture-native-session.py`
+- **Automated result:** 15 tests passed
+- **Independent review:** implementation security, protocol consistency, and test
+  coverage reviews found no remaining blocker after exact-match, ignore-negation,
+  empty-environment, and public-output hardening.
+
+| Check | Result | Evidence and scope |
+| --- | --- | --- |
+| Claude Code exact identity | pass | Exact `CLAUDE_CODE_SESSION_ID` wins among decoys; missing or duplicate exact matches do not select by recency. |
+| Claude Code companion boundary | pass | Only regular descendants of the exact adjacent session directory are copied; sibling data and symlinks are excluded. |
+| Codex exact identity | pass | `CODEX_THREAD_ID` has precedence and never falls through after a miss; `CODEX_SESSION_ID` is used only when the thread variable is absent; custom/empty `CODEX_HOME` behavior passed. |
+| Codex filename boundary | pass | The current `rollout-YYYY-MM-DDTHH-MM-SS-<thread-id>.jsonl` form is parsed before exact ID comparison; suffix collisions and duplicate exact rollouts are unavailable. |
+| Byte and digest integrity | pass | Primary/associated snapshot bytes equal the source boundary, source content/mtime are unchanged, and per-file, primary, and manifest SHA-256 checks match. |
+| Private-path safety | pass | Destination is restricted to ignored, untracked `.relay/private/`; ignore negation and unsafe ID cases are refused; emitted public metadata contains no absolute native root. |
+| Refresh behavior | pass | Repeated capture replaces the stable ID-scoped snapshot without generation copies; an unavailable refresh preserves the prior successful bytes and digest. |
+| Bootstrap independence | pass | Removing the entire private tree leaves the template adapter, START/STATE, D/R/P owners, and normal bootstrap surface intact. |
+| Repository regressions | pass | Markdown links/anchors, migration coverage matrices, shell fences, stable-ID uniqueness, public-content patterns, private ignores, and `git diff --check` passed. |
+
+The helper never parses or loads JSONL into model context. Its private manifest marks
+`closed_session: false` and records a captured-through watermark; later native writes
+are outside that boundary. An unrecognized future Codex rollout filename is reported
+`unavailable` rather than guessed. Capture availability does not change semantic
+conversation coverage, authority, provenance, or verification.
+
+The sealed Scenario A/B runs were not repeated: this candidate does not change the
+template or Coastwatch adapters, START/STATE bootstrap semantics, Scenario A/B text,
+or R-002/R-003 evidence. The new conformance section is appended after the historical
+A–I rubric and tests only the private MIGRATE helper boundary.
+
+Reproduce the bounded helper checks with:
+
+```text
+python3 -m unittest discover -s tests -v
+git diff --check
+git check-ignore -v .relay/private/migrations/probe/native-sessions/codex/probe
+git ls-files -- .relay/private
+```

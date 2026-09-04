@@ -1,9 +1,11 @@
 # Current state
 
-- **Frontier:** Project Relay v0.1 design and native A/B acceptance are complete;
-  v0.1 is sealed at the final annotated tag `v0.1`.
-- **Active work:** none.
-- **Next human gate:** none for v0.1; the design and acceptance gate is closed.
+- **Frontier:** Project Relay v0.1 remains sealed; a conservative post-v0.1
+  MIGRATE native-session forensic snapshot enhancement is implemented and validated
+  on `main` as a review candidate.
+- **Active work:** project-owner review of the bounded forensic-capture enhancement.
+- **Next human gate:** accept or revise this post-v0.1 enhancement; the sealed v0.1
+  design and native A/B boundary is unchanged.
 
 ## Accepted governing decisions
 
@@ -15,7 +17,9 @@
 
 ## Immediate risks and unknowns
 
-None within the sealed v0.1 scope.
+None within the sealed v0.1 scope. The post-v0.1 helper is optional tooling for
+private migration evidence; `.relay/private/` remains non-canonical, non-portable,
+and unnecessary for fresh-agent continuation.
 
 ## Retained evidence and scope
 
@@ -23,6 +27,9 @@ None within the sealed v0.1 scope.
   Scenario A bounded-retrieval failure and the pre-remediation B pass.
 - [R-003](RECORDS.md#r-003--bounded-retrieval-remediation-evidence) is the accepted
   final A pass and required B rerun evidence at the same remediation candidate.
+- The post-v0.1 MIGRATE enhancement has a separately labelled
+  [validation addendum](../docs/validation.md#post-v01-migrate-native-session-snapshot-addendum--2026-09-05);
+  it does not rewrite R-002/R-003, the A/B rubric, or the frozen Coastwatch dossier.
 - Other native-agent platforms remain outside v0.1 scope.
 
 ## Background execution

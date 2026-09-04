@@ -45,6 +45,10 @@ Rejected as a migration dependency. Exports may be incomplete, unavailable, too
 large, sensitive, or semantically ambiguous. The incumbent performs a bounded audit;
 material claims are extracted and verified with explicit blind spots.
 
+This does not prohibit an ignored, exact-session local byte snapshot as forensic
+insurance when native storage is accessible. Such a snapshot remains optional,
+non-canonical, non-portable, and unnecessary for migration or fresh-agent recovery.
+
 ### Automatic “latest evidence wins”
 
 Rejected because observed reality and accepted intent are different axes. Fresh
