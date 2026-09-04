@@ -235,9 +235,45 @@ A fresh agent MUST:
 1. read its native adapter;
 2. read `.relay/START.md` and `.relay/STATE.md` completely;
 3. inspect the Git branch and working tree;
-4. follow only task-relevant IDs into deeper canonical files;
+4. build the requested working set from START and STATE, then answer from that set
+   before expanding it;
 5. verify time-sensitive external state before presenting it as current;
 6. state unknown or last-observed conditions without filling gaps from memory.
+
+A stable-ID link is an on-demand pointer, not a default read obligation. If STATE is
+sufficient to answer a requested fact, an agent MUST NOT follow the deeper owner
+solely to reconfirm it, increase confidence, or gain a complete understanding of the
+project. Follow a deeper D, R, or P ID only when at least one of these applies:
+
+- the requested fact is absent from STATE;
+- the task executes or modifies that owner;
+- exact procedure or resource detail is required;
+- a time-sensitive fact requires fresh verification;
+- a canonical conflict or uncertainty cannot be resolved from the current snapshot.
+
+A request for where exact detail lives is answered by the ownership map and
+stable-ID pointer; it does not by itself request that detail.
+
+When an ID must be followed, read only its stable-ID record or section and the direct
+dependencies it references that are necessary to complete the task; do not follow a
+transitive dependency chain by default. An ID living in a monolithic registry does
+not authorize reading all of `DECISIONS.md`, `RECORDS.md`, or `PROCEDURES.md`. Use
+exact-heading search plus a bounded line range, or the equivalent bounded operation
+in the native tool, instead of loading the full registry.
+
+Stop bootstrap retrieval when all of the following are true:
+
+- every item requested by the prompt has an authoritative owner;
+- the current coordination state is sufficient to answer;
+- no required freshness, conflict, or uncertainty remains unresolved;
+- the task has not requested execution, modification, audit, or provenance
+  reconstruction.
+
+Do not continue reading for “complete understanding.” Migration dossiers, evidence
+archives, and historical audit or provenance records are supporting provenance, not
+ordinary bootstrap material. During bootstrap, do not expand them unless the current
+task explicitly requires audit, history, or provenance, or a task-relevant canonical
+owner requires that evidence to resolve a conflict or verification question.
 
 The result is a compact working set: frontier, active work, governing choices, next
 human gate, and pointers to exact detail. Re-bootstrap after compaction using the
