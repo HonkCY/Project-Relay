@@ -240,6 +240,10 @@ A fresh agent MUST:
 5. verify time-sensitive external state before presenting it as current;
 6. state unknown or last-observed conditions without filling gaps from memory.
 
+Do not read or inventory other project content before START and STATE are complete.
+Unless the task requires repository history, the bootstrap Git inspection is limited
+to the current branch and working-tree status.
+
 A stable-ID link is an on-demand pointer, not a default read obligation. If STATE is
 sufficient to answer a requested fact, an agent MUST NOT follow the deeper owner
 solely to reconfirm it, increase confidence, or gain a complete understanding of the
@@ -259,7 +263,9 @@ dependencies it references that are necessary to complete the task; do not follo
 transitive dependency chain by default. An ID living in a monolithic registry does
 not authorize reading all of `DECISIONS.md`, `RECORDS.md`, or `PROCEDURES.md`. Use
 exact-heading search plus a bounded line range, or the equivalent bounded operation
-in the native tool, instead of loading the full registry.
+in the native tool, instead of loading the full registry. Do not enumerate registry
+IDs or headings to inventory possible detail. After a retrieval condition applies,
+the lookup MUST name the single relevant stable ID and its owning registry.
 
 Stop bootstrap retrieval when all of the following are true:
 

@@ -20,6 +20,10 @@ adapters; tracked files in `.relay/` are the portable canonical workspace.
 5. If memory conflicts with canonical state or evidence, record and verify the
    conflict; do not choose silently.
 
+Do not read or inventory other project content before START and STATE are complete.
+Unless the task requires repository history, the bootstrap Git inspection stops at
+the current branch and working-tree status.
+
 If STATE already answers a requested fact, do not follow its deeper owner merely to
 reconfirm it, increase confidence, or understand the whole project. Follow a D/R/P
 ID only when the requested fact is absent from STATE, the task executes or modifies
@@ -32,7 +36,9 @@ When following an ID, read only that stable-ID record or section and the direct
 dependencies it references that are required for the task; do not follow a
 transitive chain by default. Its presence in a monolithic registry does not make the
 full registry part of the working set. Locate the exact ID heading first, then use a
-bounded line range or the equivalent offset/limit operation in the native tool.
+bounded line range or the equivalent offset/limit operation in the native tool. Do
+not enumerate registry IDs/headings to inventory possible detail; once a retrieval
+condition applies, name the single relevant stable ID and owning registry.
 
 Stop bootstrap retrieval once every requested item has an authoritative owner, the
 current coordination state is sufficient to answer, no required freshness/conflict/
