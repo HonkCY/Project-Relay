@@ -1,10 +1,11 @@
 # Current state
 
-- **Frontier:** the complete v0.1 protocol, template, migration kit, and synthetic
-  fixture are internally validated at the `v0.1-design` checkpoint and ready for
-  owner review.
-- **Active work:** none; implementation and internal adversarial review are complete.
-- **Next human gate:** review the completed v0.1 design checkpoint.
+- **Frontier:** real native acceptance gate A/B has run against the v0.1 design:
+  B passed; A recovered the correct state but failed its bounded-retrieval criterion.
+- **Active work:** inspect [R-002 native A/B evidence](RECORDS.md#r-002--native-a-b-acceptance-evidence)
+  and decide the smallest retrieval correction before rerunning A.
+- **Next human gate:** review the A failure disposition and B pass, then authorize or
+  revise the A remediation/retest boundary.
 
 ## Accepted governing decisions
 
@@ -20,9 +21,11 @@
 ## Immediate risks and unknowns
 
 - Human acceptance of the proposed v0.1 design is pending.
-- Real clean-session Codex and Claude Code runs for acceptance scenarios A/B remain
-  pending; other native-agent platforms are outside v0.1 scope.
-- See the [validation record](../docs/validation.md) for the exact evidence boundary.
+- Scenario A does not pass yet: both native agents read beyond the task-relevant owner
+  set even though their reported frontier, decisions, gate, and unknowns were correct.
+- Scenario B passed a real Claude Code Opus → Codex → Claude Code Opus transition.
+  See [R-002](RECORDS.md#r-002--native-a-b-acceptance-evidence) for the exact evidence
+  boundary. Other native-agent platforms remain outside v0.1 scope.
 
 ## Background execution
 

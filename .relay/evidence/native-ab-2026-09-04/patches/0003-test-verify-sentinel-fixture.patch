@@ -1,0 +1,89 @@
+From e64691efaafd1c92b1c319099796809ccee63bdb Mon Sep 17 00:00:00 2001
+From: Codex CLI <codex-cli@example.invalid>
+Date: Fri, 4 Sep 2026 12:53:36 +0800
+Subject: [PATCH 3/4] test: verify sentinel fixture
+
+---
+ .relay/RECORDS.md | 19 ++++++++++++-------
+ .relay/STATE.md   | 12 ++++++------
+ 2 files changed, 18 insertions(+), 13 deletions(-)
+
+diff --git a/.relay/RECORDS.md b/.relay/RECORDS.md
+index a3ddc46..8a321dc 100644
+--- a/.relay/RECORDS.md
++++ b/.relay/RECORDS.md
+@@ -30,21 +30,26 @@
+ - **Kind:** asset
+ - **Authority:** provisional
+ - **Provenance:** durable-artifact
+-- **Verification:** verified (producer-scoped only)
++- **Verification:** verified (producer and independent Phase 2 checks)
+ - **Purpose/claim:** cohort means of normalized signals for rows retained under D-001
+ - **Locator/access:** `artifacts/summary.csv`; local file in this repository
+ - **Role:** derived output
+ - **Important contents:** `cohort,mean_normalized,n` with rows `A,0.750000,2` and
+   `B,0.250000,1`
+-- **Status or last observation:** produced and recomputation-verified in P-002 Phase 1
++- **Status or last observation:** produced in P-002 Phase 1 and independently verified
++  without modifying the artifact in P-002 Phase 2
+ - **Evidence ref:** output SHA-256
+   `558425bbf8412bb40c8f29915416ff5dce1f1d7fd9ba1dfab25aefaafd4c7d2f`; input SHA-256
+   `ea0ff0549ca50b3cf49ba4cc03e81b6f51d62d4383f8e7e17056e5f7b5a269c5`; starting commit
+   `f69e2dcc2e248db28a2d3cdcd1887a1242377caa` (clean tree); P-001 `--verify` run
+   reported `alpha 0.037`, order `filter, normalize, aggregate`, retained
+-  `s1, s2, s3`, and no artifact difference
+-- **Checked at:** 2026-09-04T04:49:29Z
+-- **Checked by:** P-002 Phase 1 native Claude session (producer)
++  `s1, s2, s3`, and no artifact difference; Phase 2 independently reproduced the
++  exact rows, confirmed strict-boundary exclusion of `s4` and exclusion of `s5`,
++  confirmed both hashes, confirmed the artifact hash was unchanged by verification,
++  and confirmed the Phase 1 parent is the recorded starting commit with R-001,
++  D-001, and the implementation unchanged from that revision
++- **Checked at:** 2026-09-04T04:52:22Z
++- **Checked by:** P-002 Phase 2 fresh Codex session (independent verifier)
+ - **Valid until / recheck rule:** recheck after R-001, D-001, P-001, or the artifact
+   changes; producer verification does not substitute for Phase 2 independent checking
+ - **Accepted by/at:** pending
+@@ -55,8 +60,8 @@
+ - **Readers/writers:** Phase 1 wrote once; Phase 2 and Phase 3 read only and must not
+   modify or overwrite it
+ - **Access/secret ref:** local filesystem; none
+-- **Risks/limitations:** verification so far is producer-scoped, run by the same
+-  session and toolchain that created the artifact; synthetic acceptance fixture only
++- **Risks/limitations:** synthetic acceptance fixture only; human acceptance and the
++  P-002 Phase 3 final folder audit remain pending
+ 
+ ## Tools
+ 
+diff --git a/.relay/STATE.md b/.relay/STATE.md
+index 3a1ce9c..1832c4f 100644
+--- a/.relay/STATE.md
++++ b/.relay/STATE.md
+@@ -1,9 +1,9 @@
+ # Current state
+ 
+-- **Frontier:** [R-002](RECORDS.md#r-002--derived-cohort-summary-artifact) is produced
+-  and producer-verified; independent verification is pending.
+-- **Active work:** execute P-002 Phase 2 in a fresh Codex session — independently
+-  verify R-002 without modifying it.
++- **Frontier:** [R-002](RECORDS.md#r-002--derived-cohort-summary-artifact) is
++  independently verified; the final folder audit is pending.
++- **Active work:** execute P-002 Phase 3 in a second fresh Claude session — close the
++  folder run without modifying R-002.
+ - **Next human gate:** after all three native sessions, the repository maintainer
+   reviews the external prompts, transcripts, diffs, and commits and assigns pass/fail.
+ 
+@@ -16,8 +16,8 @@
+ 
+ - [P-001](PROCEDURES.md#p-001--filter-normalize-and-aggregate-the-fixture) — synthetic
+   transformation mechanics exist only for this acceptance fixture.
+-- [R-002](RECORDS.md#r-002--derived-cohort-summary-artifact) — derived artifact whose
+-  only verification so far came from the session that produced it.
++- [R-002](RECORDS.md#r-002--derived-cohort-summary-artifact) — independently verified
++  derived artifact that remains provisional pending the owner gate.
+ 
+ ## Urgent blockers and unknowns
+ 
+-- 
+2.49.0
+

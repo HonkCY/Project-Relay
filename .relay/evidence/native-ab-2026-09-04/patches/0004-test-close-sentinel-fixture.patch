@@ -1,0 +1,35 @@
+From 8cbf40c0c68a42f509ec61f8adc83bc521949c87 Mon Sep 17 00:00:00 2001
+From: Claude Code Opus <claude-opus@example.invalid>
+Date: Fri, 4 Sep 2026 12:54:49 +0800
+Subject: [PATCH 4/4] test: close sentinel fixture
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+---
+ .relay/STATE.md | 12 ++++++------
+ 1 file changed, 6 insertions(+), 6 deletions(-)
+
+diff --git a/.relay/STATE.md b/.relay/STATE.md
+index 1832c4f..30cd637 100644
+--- a/.relay/STATE.md
++++ b/.relay/STATE.md
+@@ -1,11 +1,11 @@
+ # Current state
+ 
+-- **Frontier:** [R-002](RECORDS.md#r-002--derived-cohort-summary-artifact) is
+-  independently verified; the final folder audit is pending.
+-- **Active work:** execute P-002 Phase 3 in a second fresh Claude session — close the
+-  folder run without modifying R-002.
+-- **Next human gate:** after all three native sessions, the repository maintainer
+-  reviews the external prompts, transcripts, diffs, and commits and assigns pass/fail.
++- **Frontier:** the P-002 three-session transition is executed; the external verdict is
++  pending.
++- **Active work:** none.
++- **Next human gate:** the repository maintainer reviews the captured evidence — the
++  external prompts, transcripts, diffs, and the three agent commits — and assigns
++  Scenario B pass/fail.
+ 
+ ## Accepted governing decisions
+ 
+-- 
+2.49.0
+

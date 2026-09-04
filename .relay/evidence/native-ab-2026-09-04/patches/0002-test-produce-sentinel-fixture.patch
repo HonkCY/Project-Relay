@@ -1,0 +1,117 @@
+From de480849aa7ce82fc573b66a3eda288f358870c2 Mon Sep 17 00:00:00 2001
+From: Claude Code Opus <claude-opus@example.invalid>
+Date: Fri, 4 Sep 2026 12:50:09 +0800
+Subject: [PATCH 2/4] test: produce sentinel fixture
+
+Co-Authored-By: Claude Opus 5 <noreply@anthropic.com>
+---
+ .relay/PROCEDURES.md  | 10 ++++++----
+ .relay/RECORDS.md     | 33 ++++++++++++++++++++++++++++++++-
+ .relay/STATE.md       |  8 ++++++--
+ artifacts/summary.csv |  3 +++
+ 4 files changed, 47 insertions(+), 7 deletions(-)
+ create mode 100644 artifacts/summary.csv
+
+diff --git a/.relay/PROCEDURES.md b/.relay/PROCEDURES.md
+index 3598f2d..b073e64 100644
+--- a/.relay/PROCEDURES.md
++++ b/.relay/PROCEDURES.md
+@@ -4,11 +4,13 @@
+ 
+ - **Authority:** provisional
+ - **Provenance:** durable-artifact
+-- **Verification:** unverified
+-- **Evidence ref:** `scripts/transform.py`, R-001, and the expected-result checks below
+-- **Checked by/at:** Scenario B harness / 2026-09-04T04:39:49Z
++- **Verification:** verified
++- **Evidence ref:** `scripts/transform.py`, R-001, and the expected-result checks below;
++  P-002 Phase 1 production and `--verify` runs producing R-002
++- **Checked by/at:** P-002 Phase 1 native Claude session / 2026-09-04T04:49:29Z
+ - **Owner:** repository maintainer
+-- **Last tested:** never
++- **Last tested:** 2026-09-04T04:49:29Z — passed; retained `s1,s2,s3`, excluded `s4`
++  and `s5`, output matched the expected CSV exactly
+ - **Accepted by/at:** pending
+ - **Applies to:** D-001, R-001, and future R-002
+ 
+diff --git a/.relay/RECORDS.md b/.relay/RECORDS.md
+index e3f6e0a..a3ddc46 100644
+--- a/.relay/RECORDS.md
++++ b/.relay/RECORDS.md
+@@ -25,7 +25,38 @@
+ - **Access/secret ref:** local filesystem; none
+ - **Risks/limitations:** synthetic acceptance fixture only
+ 
+-No derived output record exists yet. P-002 Phase 1 creates R-002.
++## R-002 — Derived cohort summary artifact
++
++- **Kind:** asset
++- **Authority:** provisional
++- **Provenance:** durable-artifact
++- **Verification:** verified (producer-scoped only)
++- **Purpose/claim:** cohort means of normalized signals for rows retained under D-001
++- **Locator/access:** `artifacts/summary.csv`; local file in this repository
++- **Role:** derived output
++- **Important contents:** `cohort,mean_normalized,n` with rows `A,0.750000,2` and
++  `B,0.250000,1`
++- **Status or last observation:** produced and recomputation-verified in P-002 Phase 1
++- **Evidence ref:** output SHA-256
++  `558425bbf8412bb40c8f29915416ff5dce1f1d7fd9ba1dfab25aefaafd4c7d2f`; input SHA-256
++  `ea0ff0549ca50b3cf49ba4cc03e81b6f51d62d4383f8e7e17056e5f7b5a269c5`; starting commit
++  `f69e2dcc2e248db28a2d3cdcd1887a1242377caa` (clean tree); P-001 `--verify` run
++  reported `alpha 0.037`, order `filter, normalize, aggregate`, retained
++  `s1, s2, s3`, and no artifact difference
++- **Checked at:** 2026-09-04T04:49:29Z
++- **Checked by:** P-002 Phase 1 native Claude session (producer)
++- **Valid until / recheck rule:** recheck after R-001, D-001, P-001, or the artifact
++  changes; producer verification does not substitute for Phase 2 independent checking
++- **Accepted by/at:** pending
++- **Owner:** repository maintainer
++- **Inputs / outputs / dependencies:** derives from R-001 via P-001 under D-001
++- **Producer/version:** `scripts/transform.py` on Python 3.14.2, run at commit
++  `f69e2dcc2e248db28a2d3cdcd1887a1242377caa`
++- **Readers/writers:** Phase 1 wrote once; Phase 2 and Phase 3 read only and must not
++  modify or overwrite it
++- **Access/secret ref:** local filesystem; none
++- **Risks/limitations:** verification so far is producer-scoped, run by the same
++  session and toolchain that created the artifact; synthetic acceptance fixture only
+ 
+ ## Tools
+ 
+diff --git a/.relay/STATE.md b/.relay/STATE.md
+index 6e31c7a..3a1ce9c 100644
+--- a/.relay/STATE.md
++++ b/.relay/STATE.md
+@@ -1,7 +1,9 @@
+ # Current state
+ 
+-- **Frontier:** Scenario B fixture is ready at its initialization commit.
+-- **Active work:** execute P-002 Phase 1, using P-001 and R-001 to create R-002.
++- **Frontier:** [R-002](RECORDS.md#r-002--derived-cohort-summary-artifact) is produced
++  and producer-verified; independent verification is pending.
++- **Active work:** execute P-002 Phase 2 in a fresh Codex session — independently
++  verify R-002 without modifying it.
+ - **Next human gate:** after all three native sessions, the repository maintainer
+   reviews the external prompts, transcripts, diffs, and commits and assigns pass/fail.
+ 
+@@ -14,6 +16,8 @@
+ 
+ - [P-001](PROCEDURES.md#p-001--filter-normalize-and-aggregate-the-fixture) — synthetic
+   transformation mechanics exist only for this acceptance fixture.
++- [R-002](RECORDS.md#r-002--derived-cohort-summary-artifact) — derived artifact whose
++  only verification so far came from the session that produced it.
+ 
+ ## Urgent blockers and unknowns
+ 
+diff --git a/artifacts/summary.csv b/artifacts/summary.csv
+new file mode 100644
+index 0000000..c0cdf33
+--- /dev/null
++++ b/artifacts/summary.csv
+@@ -0,0 +1,3 @@
++cohort,mean_normalized,n
++A,0.750000,2
++B,0.250000,1
+-- 
+2.49.0
+

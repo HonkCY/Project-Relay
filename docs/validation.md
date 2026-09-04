@@ -1,9 +1,10 @@
 # v0.1 validation record
 
-This record describes the repository-level checks performed for the
-`v0.1-design` checkpoint. The outcome is **ready for human design review**, not a
-claim that Project Relay is production-certified or that every acceptance scenario
-has run against real external systems.
+This record describes the repository-level checks performed for the immutable
+`v0.1-design` checkpoint and, in a separately labeled addendum, later native A/B
+evidence. The outcome remains **ready for human design review**, not a claim that
+Project Relay is production-certified or that every acceptance scenario has run
+against real external systems.
 
 ## Boundary and environment
 
@@ -13,9 +14,9 @@ has run against real external systems.
 - **Runtime dependencies:** none; validation used ordinary filesystem, Git, Ruby,
   ripgrep, and Bash checks
 
-The pass table is valid only when `v0.1-design` resolves to the commit containing
-this record and the checkout is clean. Before that tag exists, treat this file as an
-in-progress release checklist rather than evidence of a completed checkpoint.
+The repository-check pass table below applies only to the tree at `v0.1-design`.
+Inspect that immutable version with `git show v0.1-design:docs/validation.md`; later
+main-branch addenda do not retroactively change the tag or its 37-file count.
 
 ## Repository checks
 
@@ -50,8 +51,23 @@ schema can represent the scenario, not that any `.example` host or service exist
 | I — public safety | Repository and reachable-history scans passed at the tagged boundary. |
 
 Scenarios are independent. “Fixture/schema inspection” is not reported as a real
-native or external-system execution. In particular, A/B compatibility must be
-demonstrated in clean product sessions before any production-release claim.
+native or external-system execution. At the tagged boundary, A/B compatibility still
+required clean product sessions before any production-release claim.
+
+## Post-tag native A/B addendum — 2026-09-04
+
+Real, clean-session native runs were completed after `v0.1-design`. The full
+public-safe record is
+[R-002 native A/B evidence](../.relay/evidence/native-ab-2026-09-04/README.md).
+This addendum does not rewrite the tagged status table above.
+
+| Scenario | Post-tag result | Disposition |
+| --- | --- | --- |
+| A — fresh bootstrap | **fail** | Claude Code Opus and Codex both recovered the correct frontier, decisions, gate, owners, and unknowns, but both exceeded the explicit task-relevant retrieval boundary. Tighten bounded retrieval and rerun A without enriching the prompt. |
+| B — Claude → Codex → Claude | **pass** | Three fresh native sessions preserved `alpha = 0.037`, filter → normalize → aggregate, epistemic fields, exact output, and a clean linear three-commit transition using the same generic prompt. |
+
+Because A and B are independent, B's pass does not offset A's failure. The current
+frontier and human gate are owned by [canonical STATE](../.relay/STATE.md).
 
 ## Reproduction notes
 

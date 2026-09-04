@@ -43,6 +43,45 @@ The common record and type-specific fields are defined by the
 - **Owner:** repository maintainer
 - **Risks/limitations:** the repository has not yet passed human review
 
+## R-002 — Native A-B acceptance evidence
+
+- **Kind:** asset
+- **Authority:** provisional
+- **Provenance:** live-environment + durable-artifact
+- **Verification:** verified
+- **Purpose/claim:** records real clean-session Scenario A results and a real
+  Claude Code Opus → Codex → Claude Code Opus Scenario B transition
+- **Locator:**
+  [`.relay/evidence/native-ab-2026-09-04/README.md`](evidence/native-ab-2026-09-04/README.md)
+  with reconstructable B format patches below that directory
+- **Role:** archive
+- **Important contents:** exact prompts, versions/models, starting boundaries,
+  observed file/ID reads, semantic answer mapping, transition commits, hashes,
+  diffs, and unambiguous external verdicts
+- **Inputs / outputs / dependencies:** P-001 and `docs/acceptance-tests.md`; updates
+  the STATE review gate but does not change D-001–D-005 authority
+- **Readers/writers:** repository reviewers read; acceptance harness writes a new
+  dated evidence record for a later run rather than rewriting this observation
+- **Producer procedure:** P-001 native A/B subset, run `2026-09-04-native-ab`
+- **Access:** tracked public-safe Markdown and text patches; no secret required
+- **Version/run:** `2026-09-04-native-ab`; first checkpoint containing this R record
+  owns the Git boundary without a self-referential hash
+- **Status or last observation:** Scenario A failed because both agents exceeded the
+  task-relevant retrieval boundary despite correct semantic recovery; Scenario B
+  passed all listed switch criteria
+- **Evidence ref:** the locator above; B chain `f69e2dc` → `de48084` → `e64691e` →
+  `8cbf40c`; external clean-tree, hash, and immutable-input checks
+- **Checked by:** Codex acceptance harness with real native Claude Code and Codex CLIs
+- **Checked at:** 2026-09-04T05:01:16Z
+- **Valid until / recheck rule:** immutable observation; create a new dated record
+  after adapter/protocol changes or any A/B rerun
+- **Owner:** repository maintainer
+- **Risks/limitations:** raw CLI event streams remain in the invoking task rather than
+  Git; the checked-in summary preserves the review facts and B patches. A Claude
+  compound `git status` check was denied by the read-only harness, but external
+  before/after checks proved the clone clean; that harness issue is distinct from A's
+  independently observed retrieval failure
+
 ## Tools
 
 No MCP server, connector, or optional external tool is required to read or use the

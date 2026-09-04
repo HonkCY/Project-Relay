@@ -5,10 +5,12 @@
 - **Authority:** provisional
 - **Provenance:** durable-artifact
 - **Verification:** unverified
-- **Evidence ref:** `docs/acceptance-tests.md`; [v0.1 internal validation](../docs/validation.md)
-- **Checked by/at:** Codex implementation agent / 2026-09-03
+- **Evidence ref:** `docs/acceptance-tests.md`; [v0.1 internal validation](../docs/validation.md);
+  [R-002 native A/B evidence](RECORDS.md#r-002--native-a-b-acceptance-evidence)
+- **Checked by/at:** Codex acceptance harness / 2026-09-04T05:01:16Z
 - **Owner:** repository maintainer
-- **Last tested:** internal repository subset on 2026-09-03; full native A/B runs pending
+- **Last tested:** real native A/B subset on 2026-09-04 — B passed; A failed bounded
+  retrieval after semantically correct bootstrap; C–I were not rerun
 - **Applies to:** D-002 through D-005 and all v0.1 acceptance scenarios
 
 ### Preconditions and inputs
