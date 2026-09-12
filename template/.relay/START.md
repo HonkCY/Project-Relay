@@ -35,6 +35,13 @@ inaccessible evidence; if readable but incomplete, report the gap. Pause depende
 actions without inventing or overwriting state. Structural plausibility does not
 prove freshness. This check does not require reading deeper owners.
 
+Before claiming bootstrap complete, check each item separately: frontier, active
+work, next human gate, governing decisions, blockers/unknowns, and background safety.
+Background safety is required even when the prompt does not ask about jobs; a
+blockers section does not replace an absent execution statement. Report any missing
+item as incomplete/unknown while answering supported items. Do not expand retrieval
+to fill this checklist or require specific headings.
+
 If STATE already answers a requested fact, do not follow its deeper owner merely to
 reconfirm it, increase confidence, or understand the whole project. Follow a D/R/P
 ID only when the requested fact is absent from STATE, the task executes or modifies
@@ -50,6 +57,13 @@ full registry part of the working set. Locate the exact ID heading first, then u
 bounded line range or the equivalent offset/limit operation in the native tool. Do
 not enumerate registry IDs/headings to inventory possible detail; once a retrieval
 condition applies, name the single relevant stable ID and owning registry.
+Search that mapped owner path, not all of `.relay/`. Never add catch-all `|^##` or
+`^#` alternatives to the exact-ID search. Read from the selected heading only as far
+as its section and immediate boundary. No exact match after a successful search of
+an accessible mapped file means a missing required owner; stop dependent work. A
+read/search error is not proof of absence. Do not broaden to registry contents, other
+workspaces, or Git/stash history to find a substitute. A separately requested
+audit/recovery task may justify scoped historical reads, not silent promotion.
 
 Require one owning definition for a task-required ID within this workspace's map
 (including mapped shards). Other workspaces, examples, references, and historical
@@ -70,10 +84,11 @@ supporting provenance, not ordinary bootstrap material. Do not expand them unles
 the task explicitly requires audit/history/provenance, or a task-relevant canonical
 owner needs that evidence to resolve a conflict or verification question.
 
-Because this is a hidden directory, search with an explicit path or, for example:
+Use an explicit mapped file path so hidden-directory filtering cannot hide the
+owner. For example, substitute the task-required R ID for this illustrative R-123:
 
 ```sh
-rg --hidden --glob '!.git/**' '<term>' .relay
+rg -n '^## R-123([[:space:]]|$)' .relay/RECORDS.md
 ```
 
 ## Field ownership

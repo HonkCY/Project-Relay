@@ -200,8 +200,14 @@ def build_fixture(destination: Path, case: str = "normal", template: Path | None
     elif case == "truncated-state":
         (relay / "STATE.md").write_text(STATE.split("## Background execution")[0], encoding="utf-8")
     elif case == "duplicate-id":
-        with (relay / "RECORDS.md").open("a", encoding="utf-8") as stream:
-            stream.write("\n## R-001 — Conflicting workspace definition\n\n- **Role:** cache\n")
+        primary = RECORDS.replace(
+            "- **Authority:** accepted\n",
+            "- **Authority:** accepted\n- **Supersedes / superseded by:** none\n",
+        )
+        conflicting = primary.split("\n\n", 1)[1].replace(
+            "**Role:** canonical", "**Role:** cache",
+        ).replace("writer: current fixture operator", "writers: none")
+        (relay / "RECORDS.md").write_text(primary + "\n" + conflicting, encoding="utf-8")
     elif case == "conflict-copy":
         (relay / "RECORDS (conflicted copy).md").write_text(
             RECORDS.replace("**Role:** canonical", "**Role:** cache"), encoding="utf-8",

@@ -261,6 +261,12 @@ spelling is not prescribed. Explicit `none`, `unknown`, and initialization-in-pr
 values are valid, with their stated limits. Missing content MUST NOT be interpreted
 as no blockers, no governing decisions, or no background work. If a tool paginates
 or truncates its output, finish reading the remaining ranges before judging the file.
+Before saying bootstrap is complete, check each snapshot item separately: frontier,
+active work, next human gate, governing decisions, urgent blockers/unknowns, and
+background safety. Background safety is required even if the prompt does not ask
+about jobs. A present blockers section cannot stand in for an absent execution
+statement. Report an absent item as incomplete/unknown while answering the supported
+items; this requires no deeper retrieval or heading-specific schema.
 
 If the source cannot be inspected, report `inaccessible` for the affected evidence.
 If bytes are readable but incomplete or inconsistent, report the missing information
@@ -291,6 +297,16 @@ exact-heading search plus a bounded line range, or the equivalent bounded operat
 in the native tool, instead of loading the full registry. Do not enumerate registry
 IDs or headings to inventory possible detail. After a retrieval condition applies,
 the lookup MUST name the single relevant stable ID and its owning registry.
+Search that mapped owner path, not the entire `.relay/` tree. Do not add catch-all
+heading alternatives such as `|^##` or `^#` to an exact-ID search. Locate the selected
+section's end with a bounded read; inspecting its immediate boundary is not permission
+to inventory every heading. With no exact match after a successful search of an
+accessible mapped file, report the missing required owner and constrain dependent
+work; a read/search error remains inaccessible or unverified evidence, not proof
+of absence. Do not fall back to registry-wide reads, other
+workspaces, or Git/stash history merely to find a substitute. A separately requested
+audit/recovery task may justify its own scoped historical retrieval, never automatic
+promotion of historical content into current truth.
 
 A stable ID has one owning definition within the current workspace's canonical
 map, including any explicitly mapped shards. References, another workspace, template

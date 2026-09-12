@@ -20,8 +20,10 @@
 
 ## Immediate risks and unknowns
 
-None within the sealed v0.1 scope. New workspace-integrity behavior has not yet
-completed native regression; no v0.2 PASS or release is claimed. Read-back cannot
+None within the sealed v0.1 scope. The first v0.2 native candidate passed A and C but
+failed new fault conformance through excess retrieval and a missed background-safety
+gap. Targeted reminder remediation and an equal-authority duplicate fixture correction
+are awaiting fresh regression; no v0.2 PASS or release is claimed. Read-back cannot
 prove storage durability, remote sync completion, or cross-file atomicity. The
 post-v0.1 helper remains optional: `.relay/private/` is non-canonical, non-portable,
 and unnecessary for fresh-agent continuation.

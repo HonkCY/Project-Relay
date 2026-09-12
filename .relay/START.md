@@ -24,6 +24,11 @@ conflict. A question about where detail lives needs only the ownership pointer.
 Locate that exact ID heading in its mapped registry, then read its bounded section
 and only required direct dependencies; do not inventory headings or load a registry
 merely because it is monolithic. Ordinary Git bootstrap stops at current status.
+Search the mapped owner path, not all of `.relay/`; never add catch-all `|^##` or
+`^#` alternatives. No exact hit after a successful search of an accessible mapped
+file means a missing owner; read/search errors are not proof of absence. Neither
+permits reading the registry, other workspaces, or Git/stash history for a substitute. Separately
+requested audit/recovery may justify scoped historical reads, never silent promotion.
 
 Using the mandatory reads, check that START supplies its ownership/write-back map
 and STATE supplies frontier, active work, gate, governing decisions, urgent unknowns,
@@ -32,6 +37,11 @@ explicit none/unknown/initialization placeholders are valid. Complete paginated 
 truncated tool output before judging the file. Missing content is not an answer.
 Report inaccessible evidence or readable gaps/conflicts accurately; preserve work
 and pause dependent actions without inventing or overwriting state.
+Before declaring bootstrap complete, check every listed snapshot item separately.
+Background safety remains required when not asked in the prompt; blockers cannot
+replace an absent execution statement. Report missing items as incomplete/unknown
+while answering supported facts, without deeper retrieval solely to fill this
+checklist or heading-specific checks.
 
 Require one definition for a task-required ID within this workspace's map. Other
 workspaces, examples, and historical evidence are separate scopes. Missing/ambiguous
@@ -47,8 +57,9 @@ audit, or provenance reconstruction is requested. Migration dossiers and histori
 evidence are not bootstrap material unless explicitly requested or required by a
 task-relevant owner to settle verification/conflict. Plausibility is not freshness.
 
-Because `.relay/` is hidden, search it with an explicit path or with, for example,
-`rg --hidden --glob '!.git/**' '<term>' .relay`.
+Use the explicit mapped owner path to avoid hidden-directory filtering. For example,
+substitute the required R ID in
+`rg -n '^## R-123([[:space:]]|$)' .relay/RECORDS.md`, then read its bounded section.
 
 This file is the short executable subset of the
 [normative framework protocol](../docs/protocol.md). Project-specific accepted

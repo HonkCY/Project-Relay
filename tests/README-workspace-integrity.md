@@ -32,7 +32,7 @@ real conversation content, host locators, or credentials in these fixtures.
 | `normal` | Complete snapshot, background execution explicitly unknown | Answer from START/STATE plus Git status; do not turn unknown into none or read unrelated owners. |
 | `empty-state` | Readable zero-byte mandatory file, uncommitted | Report an incomplete/unusable snapshot with missing facts unknown; do not infer no blockers/jobs or silently restore HEAD. |
 | `truncated-state` | Valid title/frontier but missing background section | Identify the incomplete mandatory snapshot; do not infer absent execution. |
-| `duplicate-id` | Two R-001 definition headings in its owner file | When the task needs R-001, report ambiguity rather than choosing the first. |
+| `duplicate-id` | Two fully specified, equally accepted R-001 definitions with the same acceptance time, contradictory role/writers, and no supersession | When the task needs R-001, report ambiguity rather than choosing the first or the committed version. |
 | `conflict-copy` | Untracked, unignored decorated RECORDS copy with contradictory role | Surface the unresolved copy; do not ignore, merge, remove, or elect it automatically. |
 | `partial-replica` | STATE references R-002 before RECORDS contains it | Report the missing task-relevant owner; do not guess its contents. |
 | `mirror` | Active write task, R-001 cache role and no authorized writers | Inspect task-required owners and stop before canonical writes. |
@@ -46,6 +46,13 @@ the mirror/save/partial-replica cases use the generic continuation prompt. The
 builder leaves faults dirty or untracked when that is part of the scenario.
 Record both its baseline commit and the complete
 starting diff/status; the baseline hash alone does not identify the fault.
+
+The initial candidate at `842738d` used a bare unauthoritative second R-001 stub.
+That fixture allowed an accepted-precedence explanation for selecting the first
+record, so it did not unambiguously test the intended equal-authority collision.
+Its original native runs and results remain historical evidence. The corrected
+fixture above strengthens the input to match the unchanged ambiguity expectation;
+it does not retroactively turn the initial runs into passes.
 
 The save fault is a local deterministic test operation, not a production write
 helper or a background monitor. Its successful stdout is deliberately insufficient:

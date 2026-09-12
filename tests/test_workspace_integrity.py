@@ -105,7 +105,20 @@ class WorkspaceIntegrityFixtureTests(unittest.TestCase):
 
     def test_duplicate_requested_owner_is_ambiguous_even_in_one_file(self) -> None:
         target = self.fixture("duplicate-id")
-        self.assertEqual(len(fixture_definition_lines(target / ".relay/RECORDS.md", "R-001")), 2)
+        path = target / ".relay/RECORDS.md"
+        self.assertEqual(len(fixture_definition_lines(path, "R-001")), 2)
+        records = path.read_text().split("## R-001 — Workspace copy")[1:]
+        self.assertEqual(len(records), 2)
+        for record in records:
+            self.assertIn("**Authority:** accepted", record)
+            self.assertIn("**Supersedes / superseded by:** none", record)
+            self.assertIn("**Accepted by/at:** synthetic fixture owner / 2026-09-12", record)
+            self.assertIn("**Provenance:** human-report", record)
+            self.assertIn("**Verification:** unverified", record)
+        self.assertIn("**Role:** canonical", records[0])
+        self.assertIn("writer: current fixture operator", records[0])
+        self.assertIn("**Role:** cache", records[1])
+        self.assertIn("writers: none", records[1])
 
     def test_conflict_copy_is_untracked_unignored_and_keeps_conflicting_bytes(self) -> None:
         target = self.fixture("conflict-copy")
