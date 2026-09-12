@@ -61,6 +61,15 @@ source branch/commit/dirty state, and intended target workspace. The watermark s
 what moment the first inventory describes; a delta sweep will update it before
 cutover.
 
+In that existing run boundary and related repository `SRC` observations, identify
+the incumbent live workspace, candidate target, known mirrors/backups, and who may
+write each. Coordinate one writer per canonical working copy; parallel worktrees
+need an explicit integration order. A received mirror does not gain write authority.
+When file synchronization is known to apply, check task-relevant incomplete delivery,
+conflict copies, and competing writes before affected operations; record limitations
+using the existing unknown/conflict mechanism. No automatic sync discovery or new
+coordination service is required.
+
 All extracted candidate claims start `provisional`. Do not edit accepted destination
 decisions merely because the incumbent remembers something different.
 
@@ -179,6 +188,14 @@ Record each repository/worktree role, branch, relevant commits/tags, dirty files
 generated versus tracked material, and relationships among repositories. Do not
 clean or commit incumbent work merely to make migration look tidy.
 
+Reuse repository record locator, role, readers/writers, evidence, recheck, and
+risks/limitations fields to distinguish the live canonical workspace from derived
+mirrors and archive backups. An off-host backup SHOULD exist where practical;
+record the recovery limitation if absent or unverified. A configured remote is
+not proof of a received backup. If cutover or continuation crosses hosts, identify
+the Git transport or bundle and the named commit the receiver must check, along
+with required canonical files and any receiving dirty-state overlay.
+
 ### Remote hosts, resources, and lineage
 
 Inspect important host aliases and directories. For every material resource capture
@@ -280,9 +297,23 @@ record that result and limitation without replacing a prior successful snapshot 
 guessing another session. This refresh narrows the live-session tail; it does not
 claim to include writes made after its watermark.
 
+Apply [CHECKPOINT / WRITE-BACK](protocol.md#checkpoint--write-back)
+to the changed owners, candidate STATE, and affected dossier sections: reopen their
+bounded sections at the intended paths and compare the expected changes. Use the
+existing delta rows and source observations for the check and any discrepancy;
+do not create a parallel checkpoint log. Complete paginated/truncated reads before
+classifying a missing value. A successful write response alone does not complete the
+checkpoint, and read-back proves only locally observed content at that time, not
+physical persistence or delivery to another host.
+
 Inspect the resulting diff and commit a clean candidate boundary. This commit
 contains the normalized D/R/P owners and the explicitly non-cutover candidate STATE;
 it is the exact boundary tested in Phase 7.
+
+For a receiving host, verify the named candidate commit, required canonical files,
+and relevant dirty-state/conflict observations there before declaring the handoff
+ready for Phase 7. Sequential file synchronization does not by itself establish
+that commit boundary; uncommitted source edits are not transported by Git or a bundle.
 
 ## Phase 7 — Fresh-agent dry run
 
@@ -298,6 +329,13 @@ Test one safe task-relevant operation or verification. Record the exact candidat
 commit, agent, start condition, questions asked, records read, answers, discrepancies,
 and pass/fail in `CUTOVER.md`. If the run exposes a material defect, correct its owner,
 repeat the delta sweep, commit a new candidate, and rerun Phase 7.
+
+Apply the normal bounded bootstrap integrity checks: required snapshot meaning must
+be present, and any task-required stable ID must resolve to one owner in this
+workspace. Explicit `none`/`unknown` differs from an empty or missing safety field;
+heading variants are valid. A tool's truncated output requires completing the read,
+not immediately diagnosing damaged storage. Resolve task-relevant owner ambiguity
+or inconsistent candidate files through existing conflict/unknown rules.
 
 The dry run MUST succeed when `.relay/private/` is absent. It MUST NOT ingest or
 require a native transcript snapshot; only tracked canonical owners and their safe
@@ -340,7 +378,8 @@ approved boundary proceeds below.
 On acceptance, change STATE from candidate to active canonical state and remove its
 live active-dossier links; provenance backlinks keep the frozen dossier reachable.
 Record approver, time, the reviewed pre-cutover commit, and the intended cutover-tag
-name in `CUTOVER.md`. Commit only that cutover transition, then create the named
+name in `CUTOVER.md`. Read back the changed STATE and CUTOVER sections using the same
+checkpoint rule. Commit only that cutover transition, then create the named
 annotated tag at the decision commit. The tag identifies the transition without a
 self-referential hash in the commit. From cutover onward, the old native-agent project
 context, chat, and memory are non-canonical witnesses; the underlying target

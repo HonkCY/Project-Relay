@@ -233,3 +233,64 @@ Fail on a wrong-session selection, transcript rewriting, unbounded companion cop
 symlink traversal, digest mismatch, timestamped duplicate accumulation, loss of a
 prior good snapshot after a failed refresh, tracked private output, or any bootstrap
 dependency on `.relay/private/`.
+
+## v0.2 workspace-integrity conformance
+
+These checks are additive. The A–I prompts and pass/fail criteria, the forensic
+snapshot rubric above, and all sealed evidence remain unchanged. Use new disposable
+fixtures and a recorded v0.2 candidate boundary. The
+[fixture instructions](../tests/README-workspace-integrity.md) describe mechanical
+setup and native evidence; the [upgrade guide](upgrade-v0.2.md) describes the scoped
+merge into an existing workspace.
+
+**Given:** Synthetic workspaces use the candidate's thin adapters and START rules.
+They separately expose the faults and valid alternatives below. Record the template
+candidate commit, fixture baseline commit, and full starting dirty/untracked state;
+a baseline commit alone does not identify an uncommitted fault.
+
+**When:** A genuinely fresh native agent receives the recorded bootstrap,
+continuation, recovery, or task-required owner prompt. Do not give it the answer,
+required file list, or bespoke recovery explanation. For write cases, request the
+bounded fixture operation and observe actual writes and subsequent reads.
+
+**Then:**
+
+| Boundary | Required result |
+| --- | --- |
+| Mandatory snapshot content | Native adapter, START, and STATE are read; the existing snapshot supplies frontier, active work, gate, urgent unknowns, and background safety meaning. Empty/missing content is not inferred as `none`. Explicit `unknown` is valid and remains unknown. |
+| Valid headings and tool pagination | Semantically complete heading variants pass. Truncated or paginated tool output is completed with a bounded follow-up before diagnosing a file defect. A readable zero-byte or incomplete snapshot is incomplete, not `inaccessible`; inability to inspect a source is reported separately. |
+| Required-ID resolution | Only task-required owners are followed. A missing owner or duplicate definition in the current canonical owner is surfaced, not guessed. The same ID in another workspace, fenced example, historical evidence, or frozen dossier is not automatically a collision. |
+| Visible conflict copy | A task-relevant contradictory copy exposed by status or the workspace map is treated as uncertainty until its authority is resolved. Filename resemblance or recency cannot elect an owner. No global duplicate-ID scan is required. |
+| Failed save/read-back | A fixture operation reports write success but the expected new value is absent on bounded read-back. The agent identifies the intended path/value mismatch and does not claim checkpoint completion. Successful cases reopen the changed owner/STATE sections and confirm their expected values. |
+| Mirror write request | A copy whose relevant repository owner grants no canonical write authority cannot become a writer merely because it received files or a task asks for a change. The agent exposes the boundary and stops affected canonical writes until an authorized workspace or integration path is established. |
+| Partial replica | A task requires a stable ID referenced by STATE but absent from its designated owner. The agent reports the missing dependency and constrains affected work; it does not reconstruct the record from chat, a different workspace, or a guessed newest file. |
+| Named commit and dirty recovery | Cross-host handoff names a coherent commit and checks that the receiver has that commit, the required canonical files, and no unresolved relevant dirty overlay. Source edits not committed are not claimed to be transferred. Local recovery still uses newer uncommitted canonical edits and preserves unrelated dirty work. |
+| Backup limitation | A configured remote alone cannot establish a received off-host backup. The repository record distinguishes a checked backup from an absent or unverified one and records its recovery limitation using existing fields. Absence of a backup alone does not create a mandatory runtime dependency or block otherwise safe local work. |
+
+Across these cases, follow the original answer-first stopping rule. Do not expand
+unrelated registries, migration dossiers, or evidence merely to build confidence.
+Use the existing authority, verification, conflict, and unknown semantics; checks
+do not grant decision acceptance. Read-back establishes content observed at a local
+path and time, not fsync, cross-file atomicity, future persistence, or completed
+replication. A structurally complete but stale snapshot remains a limitation.
+
+**Evidence:** Mechanical tests must establish the synthetic fault or Git boundary
+they claim to test; they cannot claim a native semantic pass. Native runs separately
+record exact prompts, product/model/version, adapter/START/STATE discovery, exact
+files/IDs/sections read, operation and read-back results, semantic answers/diffs,
+pass/fail, and any unrelated registry/migration/evidence reads. Run the existing
+native-session capture tests as regression. Keep raw native transcripts private and
+publish only sanitized evidence appropriate to the repository.
+
+Fail on an unsupported `none`/`inaccessible` conclusion, heading-only rejection,
+guessed owner, unauthorized mirror write, discarded dirty recovery state, checkpoint
+success without expected read-back, unverified handoff/backup success claim, or
+task-unnecessary corpus expansion. A passing fixture setup test cannot compensate
+for a native behavioral failure.
+
+Before a v0.2 release gate, rerun native Scenario A for fresh Claude Code and Codex,
+Scenario B's complete Claude → Codex → Claude chain, and Scenario C recovery. A and
+the final B chain must pass at the same final candidate boundary after remediation
+stabilizes. Preserve the original prompts and semantic expectations, record new
+evidence separately, and return to human review; historical v0.1 A/B results do not
+prove this changed bootstrap/checkpoint boundary.

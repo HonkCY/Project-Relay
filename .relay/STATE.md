@@ -1,11 +1,14 @@
 # Current state
 
-- **Frontier:** Project Relay v0.1 remains sealed; a conservative post-v0.1
-  MIGRATE native-session forensic snapshot enhancement is implemented and validated
-  on `main` as a review candidate.
-- **Active work:** project-owner review of the bounded forensic-capture enhancement.
-- **Next human gate:** accept or revise this post-v0.1 enhancement; the sealed v0.1
-  design and native A/B boundary is unchanged.
+- **Frontier:** Project Relay v0.1 remains sealed. The approved v0.2 implementation
+  scope adds conservative workspace-integrity rules without changing canonical
+  objects or native adapters.
+- **Active work:** implement and validate bounded usability/owner-conflict checks,
+  checkpoint read-back, and writer/copy boundaries; run new fault fixtures and
+  fresh native A/B/C regression at a recorded candidate.
+- **Next human gate:** review the v0.2 candidate and its separate validation. The
+  earlier post-v0.1 forensic-capture enhancement also remains pending explicit
+  owner acceptance; implementation authorization does not accept either release.
 
 ## Accepted governing decisions
 
@@ -17,8 +20,10 @@
 
 ## Immediate risks and unknowns
 
-None within the sealed v0.1 scope. The post-v0.1 helper is optional tooling for
-private migration evidence; `.relay/private/` remains non-canonical, non-portable,
+None within the sealed v0.1 scope. New workspace-integrity behavior has not yet
+completed native regression; no v0.2 PASS or release is claimed. Read-back cannot
+prove storage durability, remote sync completion, or cross-file atomicity. The
+post-v0.1 helper remains optional: `.relay/private/` is non-canonical, non-portable,
 and unnecessary for fresh-agent continuation.
 
 ## Retained evidence and scope
@@ -31,6 +36,9 @@ and unnecessary for fresh-agent continuation.
   [validation addendum](../docs/validation.md#post-v01-migrate-native-session-snapshot-addendum--2026-09-05);
   it does not rewrite R-002/R-003, the A/B rubric, or the frozen Coastwatch dossier.
 - Other native-agent platforms remain outside v0.1 scope.
+- [Upgrade guidance](../docs/upgrade-v0.2.md) and
+  [disposable fault fixtures](../tests/README-workspace-integrity.md) define the
+  scoped implementation and new validation without rewriting historical evidence.
 
 ## Background execution
 

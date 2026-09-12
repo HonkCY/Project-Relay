@@ -1,7 +1,8 @@
 # Relay start
 
-This project uses Project Relay protocol v0.1. The root native-agent files are thin
-adapters; tracked files in `.relay/` are the portable canonical workspace.
+This project uses Project Relay protocol v0.2 (review candidate). The root
+native-agent files are thin adapters; tracked files in `.relay/` are the portable
+canonical workspace.
 
 ## Bootstrap
 
@@ -24,6 +25,16 @@ Do not read or inventory other project content before START and STATE are comple
 Unless the task requires repository history, the bootstrap Git inspection stops at
 the current branch and working-tree status.
 
+From these mandatory reads, confirm START has a usable ownership map/write-back
+rule and STATE includes frontier, active work, human gate, governing decisions,
+blockers/unknowns, and background safety. Require non-empty, intelligible content,
+not exact heading spellings. Explicit `none`, `unknown`, or initialization-in-progress
+is valid; absent content never means no blockers or no jobs. Finish tool pagination
+or truncated output before judging the file. If bytes cannot be inspected, report
+inaccessible evidence; if readable but incomplete, report the gap. Pause dependent
+actions without inventing or overwriting state. Structural plausibility does not
+prove freshness. This check does not require reading deeper owners.
+
 If STATE already answers a requested fact, do not follow its deeper owner merely to
 reconfirm it, increase confidence, or understand the whole project. Follow a D/R/P
 ID only when the requested fact is absent from STATE, the task executes or modifies
@@ -39,6 +50,15 @@ full registry part of the working set. Locate the exact ID heading first, then u
 bounded line range or the equivalent offset/limit operation in the native tool. Do
 not enumerate registry IDs/headings to inventory possible detail; once a retrieval
 condition applies, name the single relevant stable ID and owning registry.
+
+Require one owning definition for a task-required ID within this workspace's map
+(including mapped shards). Other workspaces, examples, references, and historical
+evidence are separate scopes. If the lookup is missing/ambiguous, or Git status or
+a relevant path exposes a suspected conflict copy, use the map and accepted
+precedence to resolve only that scope. Preserve files and pause dependent actions
+for human disposition if authority remains ambiguous. Never choose by mtime or
+first hit, automatically delete/hide suspected conflict copies, or scan all
+registries to hunt duplicates.
 
 Stop bootstrap retrieval once every requested item has an authoritative owner, the
 current coordination state is sufficient to answer, no required freshness/conflict/
@@ -97,7 +117,29 @@ changes, and before a likely switch/context-loss boundary.
 1. Verify where possible.
 2. Edit the one owning record/procedure.
 3. Refresh `STATE.md` only if its snapshot fields changed.
-4. Review the Git diff; commit one coherent transition when authorized.
+4. Re-read the changed owner sections from their actual paths and changed STATE
+   completely; compare with the intended values before claiming completion.
+5. Review the Git diff; commit one coherent transition when authorized.
 
-Saving the canonical files is the crash-resistant checkpoint. Do not checkpoint
-ordinary commentary, unchanged polls, or every turn.
+Read-back confirms the saved local checkpoint at that observation time, even before
+a commit. It does not prove disk durability, completed upload, future freshness,
+or cross-file atomicity. On failed read-back, completion is unconfirmed; on mismatch,
+report the conflict. Preserve recoverable work; if canonical writes are unsafe,
+report directly instead of claiming persistence. Do not checkpoint ordinary
+commentary, unchanged polls, or every turn.
+
+## Writer and copy boundary
+
+Default to one coordinated writer per canonical working copy. Agents/worktrees may
+share work with explicit ownership and serialized integration. Respect known copy
+roles and write restrictions in the local map/records; a mirror is not a writer
+merely because it looks current. Uncertain role or authority pauses dependent writes.
+Normal local bootstrap requires no replica, backup, or remote inventory.
+
+For a cross-host switch, checkpoint and review a named source commit, transfer it
+through Git or a bundle, and verify the receiver's commit, dirty state, and required
+canonical files before taking over. Per-file sync gives no coherent Git/tree
+guarantee; uncommitted edits and private evidence are not carried by Git transport.
+Local RECOVER still preserves newer uncommitted work. Record off-host backup
+coverage or its absence/unknown risk in the existing repository owner when setting
+up or changing the deployment.

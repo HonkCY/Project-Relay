@@ -8,7 +8,7 @@ chat history, compaction summaries, or model memory.
 > **Invariant:** agent, session, and model memory is disposable. Project state is
 > not.
 
-This repository is the v0.1 protocol, a copyable workspace template, a migration
+This repository contains the protocol, a copyable workspace template, a migration
 kit, and a sanitized research-project example. It is deliberately Markdown-first:
 native coding agents remain the execution harness, while Git and the project
 folder are the durable system of record.
@@ -22,10 +22,14 @@ folder are the durable system of record.
   [INIT](docs/init.md).
 - To externalize a project whose important state is still in native-agent chats,
   memories, remote hosts, or running systems, follow [MIGRATE](docs/migrate.md).
+- To merge the proposed v0.2 integrity rules into an existing workspace, follow the
+  [upgrade guide](docs/upgrade-v0.2.md).
 - To review the design, run the scenarios in
   [acceptance tests](docs/acceptance-tests.md).
+- To exercise v0.2 read/write and copy-boundary faults, use the
+  [disposable integrity fixtures](tests/README-workspace-integrity.md).
 - To inspect what was and was not exercised at the checkpoint, read the
-  [v0.1 validation record](docs/validation.md).
+  [validation record](docs/validation.md).
 - To see a filled workspace, open the
   [Coastwatch example](examples/coastwatch/README.md).
 
@@ -48,7 +52,8 @@ The native agent reads a tiny root adapter, then always reads:
 
 It follows stable IDs and links into decisions, systems, or procedures only when
 the task needs them. After a material change, it updates the owning canonical
-record, refreshes the snapshot only if needed, and creates a coherent Git diff.
+record, refreshes the snapshot only if needed, reads back the affected sections to
+confirm expected values, and creates a coherent Git diff.
 
 ## The minimal model
 
@@ -59,8 +64,9 @@ record, refreshes the snapshot only if needed, and creates a coherent Git diff.
 | Procedure | Exact repeatable work, verification, and recovery | Edit in place |
 
 CHECKPOINT is a lifecycle, not a fourth truth object: write the owning objects
-promptly, inspect the diff, and commit a coherent transition when authorized. Git
-already supplies the append-only history.
+promptly, confirm the expected local content by bounded read-back, inspect the diff,
+and commit a coherent transition when authorized. Git already supplies the
+append-only history.
 
 The default template maps these objects to five canonical Markdown files under
 `.relay/`. Resources, environments, tools, services, jobs, and assets share one
@@ -93,3 +99,10 @@ The historical `v0.1-design` tag remains fixed; [R-002](.relay/RECORDS.md#r-002-
 preserves the initial native A failure, and accepted
 [R-003](.relay/RECORDS.md#r-003--bounded-retrieval-remediation-evidence) owns the final
 post-remediation A/B results.
+
+The current development target is a v0.2 review candidate for bounded workspace
+integrity checks, checkpoint read-back, coordinated writes, and explicit copy and
+handoff boundaries. It retains the canonical object model and the private forensic
+snapshot boundary. New mechanical and native conformance results are recorded
+separately in [validation](docs/validation.md); the historical v0.1 pass does not
+establish a v0.2 pass or authorize a new release.

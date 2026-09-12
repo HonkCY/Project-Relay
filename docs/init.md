@@ -35,6 +35,18 @@ git init
 Existing uncommitted work belongs to the project. Preserve and describe it in the
 initial state when relevant; do not discard or absorb unrelated changes silently.
 
+Identify the intended canonical workspace and any known mirrors or backups before
+writing. Use existing repository record fields in step 5: safe locator, role,
+readers/writers, observed revision, recheck rule, and risks/limitations. A mirror
+may use role `derived` and a backup `archive`; neither becomes an authorized writer
+merely by receiving files. Coordinate one writer for this canonical working copy;
+parallel worktrees require an explicit integration order before canonical writes.
+
+If the workspace is known to use file synchronization, inspect only task-relevant
+signs of incomplete delivery, conflicts, or competing writes. Resolve those before
+affected writes; do not infer safety from a sync icon or launch an automatic
+sync-detection service. Record what is known and any unresolved boundary limitation.
+
 ### 2. Install the neutral workspace
 
 If `.relay/` is absent, copy the template directory with an explicit no-clobber
@@ -47,7 +59,8 @@ cp -R /path/to/project-relay/template/.relay .
 
 If `.relay/` already exists, do not run the copy command. Treat this as an upgrade:
 compare protocol versions and merge individual missing/schema changes only after
-reviewing the existing canonical owners and dirty Git state.
+reviewing the existing canonical owners and dirty Git state. See the
+[v0.2 upgrade guide](upgrade-v0.2.md) for the bounded integrity changes.
 
 Then merge the template's ignore patterns into the project's `.gitignore`. Ignore
 rules are defense in depth; canonical files still must not contain secret values.
@@ -93,6 +106,13 @@ Create stable-ID records only for what exists:
 Use `unknown` rather than prose that exceeds the available evidence. Empty sections
 are valid. Do not invent a service or job record merely to fill the template.
 
+Record the workspace/copy roles established in step 1 in the relevant repository
+record, including who may write and how a receiving copy is checked. An off-host
+backup SHOULD exist where practical; when absent or unverified, state the resulting
+recovery limitation. A configured remote alone is not evidence that a backup was
+received. Keep backup or mirror observations in the same evidence envelope as other
+repository facts; no additional registry is needed.
+
 ### 6. Verify from a fresh-reader perspective
 
 Without using the current conversation, answer from the new files:
@@ -108,11 +128,23 @@ If the files cannot answer the first four, fix the owning records. If question 5
 cannot be live-verified, record `unknown` or “last observed” with freshness, never a
 timeless `running`/`healthy` claim.
 
+Confirm the necessary snapshot meaning, not exact heading text. An explicit `none`
+or `unknown` is meaningful; an empty file, missing background safety statement, or
+unresolved placeholder is not an equivalent answer. If the read tool paginates or
+truncates output, finish that bounded read before judging the file incomplete.
+Check only owners needed for these questions. A missing or ambiguous stable-ID
+owner must be resolved using the current workspace map and authority rules before
+the affected operation; copies in other workspaces do not create duplicate owners.
+
 ### 7. Checkpoint and commit
 
-Ensure the owning files contain the source state, records, unknowns, and next gate.
-That durable write-back is the checkpoint. Review the diff, then create one coherent
-commit when authorized:
+Apply [CHECKPOINT / WRITE-BACK](protocol.md#checkpoint--write-back): save the owning
+records first and the snapshot if changed, then reopen only the changed sections
+and confirm their expected values at the intended canonical paths. Do not declare
+the checkpoint complete when the write reports success but read-back is missing,
+different, or inaccessible. Read-back confirms locally observed content at that
+time; it is not a guarantee of physical persistence or completed synchronization.
+Review the diff, then create one coherent commit when authorized:
 
 ```sh
 git add AGENTS.md CLAUDE.md .relay .gitignore
@@ -121,6 +153,12 @@ git commit -m "chore: initialize Project Relay workspace"
 ```
 
 Adjust the path list so it does not stage unrelated existing work.
+
+For cross-host handoff, transfer the named coherent commit through Git transport
+or a bundle and check that the receiver has that commit and the required canonical
+files before reporting handoff complete. Inspect receiving dirty state too; preserve
+it and resolve any relevant overlay or conflict. Uncommitted source changes are not
+included by that transfer, although they remain valid input to local RECOVER.
 
 ## INIT completion criteria
 

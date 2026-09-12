@@ -1,7 +1,9 @@
-# Project Relay protocol v0.1
+# Project Relay protocol v0.2 — review candidate
 
-This document is normative for v0.1. “MUST”, “SHOULD”, and “MAY” express requirement
-strength. Project-specific canonical truth lives under `.relay/`, not here.
+This is the normative text proposed for v0.2; release acceptance remains a human
+gate. “MUST”, “SHOULD”, and “MAY” express requirement strength. The sealed v0.1 text
+remains available at its Git tag. Project-specific canonical truth lives under
+`.relay/`, not here.
 
 ## Design boundary
 
@@ -252,6 +254,21 @@ Do not read or inventory other project content before START and STATE are comple
 Unless the task requires repository history, the bootstrap Git inspection is limited
 to the current branch and working-tree status.
 
+Using those mandatory reads, confirm that START supplies a usable ownership map and
+write-back rules, and STATE represents the snapshot fields above. The files MUST be
+non-empty and sufficiently intelligible to establish that content; exact heading
+spelling is not prescribed. Explicit `none`, `unknown`, and initialization-in-progress
+values are valid, with their stated limits. Missing content MUST NOT be interpreted
+as no blockers, no governing decisions, or no background work. If a tool paginates
+or truncates its output, finish reading the remaining ranges before judging the file.
+
+If the source cannot be inspected, report `inaccessible` for the affected evidence.
+If bytes are readable but incomplete or inconsistent, report the missing information
+or conflict using the existing uncertainty/verification semantics. Pause actions
+that depend on it; do not reconstruct absent content from memory or overwrite the
+source to make it look healthy. These checks require no deeper-owner inventory and
+do not prove that a structurally valid copy is fresh.
+
 A stable-ID link is an on-demand pointer, not a default read obligation. If STATE is
 sufficient to answer a requested fact, an agent MUST NOT follow the deeper owner
 solely to reconfirm it, increase confidence, or gain a complete understanding of the
@@ -274,6 +291,17 @@ exact-heading search plus a bounded line range, or the equivalent bounded operat
 in the native tool, instead of loading the full registry. Do not enumerate registry
 IDs or headings to inventory possible detail. After a retrieval condition applies,
 the lookup MUST name the single relevant stable ID and its owning registry.
+
+A stable ID has one owning definition within the current workspace's canonical
+map, including any explicitly mapped shards. References, another workspace, template
+examples, frozen dossiers, and historical evidence are not duplicate owners. When
+a required lookup finds zero or multiple owning definitions, or current Git status
+or a task-relevant path exposes a suspected conflict copy, resolve only that affected
+scope using the existing map and accepted precedence. If authority remains ambiguous,
+preserve the files, pause dependent actions, and expose the conflict at the human
+gate. Do not choose by modification time, first search hit, or filename preference.
+Do not auto-delete or hide suspected conflict copies with ignore rules. This rule
+does not authorize a repository-wide ID or filename inventory during bootstrap.
 
 Stop bootstrap retrieval when all of the following are true:
 
@@ -309,17 +337,54 @@ Do not checkpoint commentary, exploration with no durable consequence, unchanged
 polls, or every turn. For long-running actions, record the real job immediately
 after submission and write back again only on a material status transition.
 
-Write owning records first, then the snapshot only if it changed. Once saved, those
-canonical files are the durable checkpoint even before a commit, which makes abrupt
-session loss recoverable. Review the diff and commit coherent accepted or operational
+Write owning records first, then the snapshot only if it changed. After writing,
+re-read the affected sections from their actual paths and compare them with the
+intended changes before declaring the checkpoint complete. Re-read changed STATE
+completely; a large registry needs only its affected records and required boundaries.
+Read-back confirms the local saved checkpoint at that observation time, even before
+a commit, so it can support recovery after abrupt session loss. Review the diff and
+commit coherent accepted or operational
 transitions when authorized. Git is the transition history; never add a parallel
 state-dump log or write a future commit hash into the commit it purports to name.
+
+## Workspace read and write boundaries
+
+A successful edit-tool result alone does not confirm a checkpoint. If read-back
+fails, say completion could not be confirmed; do not claim that no bytes were saved.
+If it returns the wrong value, report the mismatch and preserve recoverable work.
+Apply the existing `inaccessible`, `unverified`, or `contradicted` labels to the
+specific evidence/claim as appropriate, not to a new workspace status object. Record
+the blocker in a usable owner when possible; if canonical files cannot be safely
+written, report it directly rather than claim a persisted checkpoint.
+
+Read-back establishes what is visible at that path and time. It does not establish
+physical-media durability, remote upload completion, future freshness, or an atomic
+multi-file transaction. File sync, remote mounts, and mirrors can expose stale or
+partially propagated content. A deployment with observed inconsistency MUST use its
+recorded source/access/recovery procedure before treating affected observations as
+current. A plausible heading or matching metadata alone does not settle that issue.
 
 ## SWITCH
 
 Before a planned switch, the current agent applies the materiality test and writes
 back any unrecorded material state. The user exits and opens the other native agent
 in the same folder. The new agent bootstraps normally; no handoff prompt is needed.
+
+The default assumes one coordinated writer to a canonical working copy at a time.
+Multiple agents or worktrees MAY be used with explicit ownership and serialized
+integration; file sync is not writer coordination. Known copy roles and write
+restrictions belong in existing repository records and START's local map. A mirror
+does not gain write authority merely because its bytes look current. If role or
+writer authority is uncertain, pause dependent writes and resolve it first.
+
+For a cross-host switch, checkpoint and review the source changes, transfer the
+named commit through Git transport or a Git bundle, then verify that the receiving
+checkout contains that commit and the task-required canonical files before assuming
+the writer role. Preserve any receiver dirty work. A different boundary or a known
+missing owner is unresolved until reconciled; a matching commit does not excuse
+dirty overrides or prove semantic correctness. Bootstrap then follows the normal
+bounded rules. This transfer procedure is task-driven, not a remote check required
+at every local bootstrap.
 
 ## RECOVER
 
@@ -328,6 +393,11 @@ canonical state, including visible uncommitted canonical edits that may be newer
 `HEAD`; preserve unrelated dirty work. Recheck task-relevant external evidence and
 mark any unrepresented interval uncertain. Never reconstruct chat-only work as fact.
 Write newly verified recovery facts to their owning records and checkpoint normally.
+
+Use the mandatory-read usability checks here too. A missing owner or empty snapshot
+is a recovery gap, not a reason to silently restore HEAD over newer work. Host-loss
+recovery additionally depends on the available backup boundary; report any later,
+unrepresented local interval as unknown.
 
 ## VERIFY
 
@@ -357,6 +427,15 @@ verifiable external resources may use INIT.
   carry safe locators and lineage.
 - Dirty state may contain the newest durable canonical state and is not an error
   to discard automatically.
+- Asynchronous file-level replication does not guarantee a coherent Git repository
+  or cross-file working snapshot. A commit identifies a tree of committed files;
+  transfer and verify that boundary for cross-host continuation. Git transport and
+  bundles do not carry uncommitted working-tree edits or ignored private evidence.
+- A workspace SHOULD have a recoverable copy outside its host, such as a remote or
+  a bundle on separate media. Use the existing repository record's safe locator,
+  role, verification/recheck, and risk fields. Record absence or unknown recovery
+  coverage explicitly. A configured remote or a local bundle alone does not prove
+  off-host availability; document the last verified recoverable boundary and limits.
 
 ## Scaling and retrieval
 
