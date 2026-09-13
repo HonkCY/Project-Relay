@@ -2,11 +2,13 @@
 
 - **Frontier:** Project Relay v0.1 remains sealed. The approved v0.2 implementation
   scope adds conservative workspace-integrity rules without changing canonical
-  objects or native adapters.
-- **Active work:** implement and validate bounded usability/owner-conflict checks,
-  checkpoint read-back, and writer/copy boundaries; run new fault fixtures and
-  fresh native A/B/C regression at a recorded candidate.
-- **Next human gate:** review the v0.2 candidate and its separate validation. The
+  objects or native adapters; the Reader lifecycle addition is a review candidate.
+- **Active work:** Reader source/output/query boundaries, task-local checkpoint and
+  recovery, and selective Maintainer integration are implemented. Review the
+  separate synthetic validation: 41 mechanical tests pass, but fresh native Reader
+  conformance still fails; do not infer release readiness from useful deliverables.
+- **Next human gate:** review the Reader changes, native failures and remaining
+  regression work before any acceptance or real-workspace rollout. The
   earlier post-v0.1 forensic-capture enhancement also remains pending explicit
   owner acceptance; implementation authorization does not accept either release.
 
@@ -28,6 +30,12 @@ prove storage durability, remote sync completion, or cross-file atomicity. The
 post-v0.1 helper remains optional: `.relay/private/` is non-canonical, non-portable,
 and unnecessary for fresh-agent continuation.
 
+The Reader tests expose native over-retrieval, incomplete checkpoint read-back and
+recovery-entry omissions. No hard source-write denial was independently established;
+unchanged synthetic source/Git bytes are only an observation. Existing v0.2 failures
+and the final native compatibility/release gate remain open; this addition does not
+repair them by assertion or lower their criteria.
+
 ## Retained evidence and scope
 
 - [R-002](RECORDS.md#r-002--native-a-b-acceptance-evidence) preserves the original
@@ -41,6 +49,10 @@ and unnecessary for fresh-agent continuation.
 - [Upgrade guidance](../docs/upgrade-v0.2.md) and
   [disposable fault fixtures](../tests/README-workspace-integrity.md) define the
   scoped implementation and new validation without rewriting historical evidence.
+- [Reader validation](../docs/validation.md#reader-lifecycle-addendum--2026-09-13)
+  and its [separate evidence](evidence/reader-mode-2026-09-13/README.md) distinguish
+  mechanical checks, actual native behavior, and unverified enforcement. Only
+  newly generated fixtures were used; no real workspace or remote source was read.
 
 ## Background execution
 

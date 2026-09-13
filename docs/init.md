@@ -6,6 +6,13 @@ not a shortcut for latent native-agent context.
 
 ## Entry gate
 
+INIT is a source-mutating lifecycle for an explicitly authorized Maintainer. A
+Reader request, a missing Relay file, or a source snapshot without Git is not INIT
+authorization. Report the gap and continue only safe permitted work; save Reader
+findings in its separate output, not by initializing Git or installing source
+files. The [session access contract](protocol.md#session-access-contract) also
+applies to the steps below.
+
 Use INIT only when all are true:
 
 - a fresh agent can inspect the project without relying on prior chat or auto-memory;
@@ -14,8 +21,10 @@ Use INIT only when all are true:
   or already explicitly supplied;
 - inaccessible history is not needed to continue safely.
 
-If any answer is “no” or “unknown,” use [MIGRATE](migrate.md). A project may look
-self-contained while a deployment, dataset lineage, or running job lives elsewhere;
+If any answer is “no” or “unknown,” the authorized setup workflow requires
+[MIGRATE](migrate.md) rather than INIT; obtain its scoped authorization before
+inventory or capture. A project may look self-contained while a deployment, dataset
+lineage, or running job lives elsewhere;
 ask that question explicitly.
 
 ## Procedure
@@ -113,7 +122,7 @@ recovery limitation. A configured remote alone is not evidence that a backup was
 received. Keep backup or mirror observations in the same evidence envelope as other
 repository facts; no additional registry is needed.
 
-### 6. Verify from a fresh-reader perspective
+### 6. Verify from a fresh-session perspective
 
 Without using the current conversation, answer from the new files:
 

@@ -51,9 +51,47 @@ The native agent reads a tiny root adapter, then always reads:
 2. `.relay/STATE.md` — small current snapshot
 
 It follows stable IDs and links into decisions, systems, or procedures only when
-the task needs them. After a material change, it updates the owning canonical
-record, refreshes the snapshot only if needed, reads back the affected sections to
-confirm expected values, and creates a coherent Git diff.
+the task needs them. After a material change, an authorized Maintainer updates the
+owning canonical record, refreshes the snapshot only if needed, reads back the
+affected sections, and creates a coherent Git diff. A Reader instead saves and
+reads back its work in its own authorized output area; the source stays read-only.
+
+## Reader: investigate and deliver without updating the source
+
+Reader is a session/task contract, not a shared-folder switch. It can retrieve
+original material through authorized R/P interfaces, compare evidence, and deliver
+analysis or proposed changes. Context access alone grants neither external query
+authority nor source write authority. Its output, scratch, and cache belong to one
+exclusive task outside the source workspace. See the
+[access contract](docs/protocol.md#session-access-contract) and optional
+[task checkpoint template](reader-kit/TASK.md); do not create another editable
+`.relay/` as project truth.
+
+These examples use synthetic paths, not existing project authorization:
+
+```text
+Start: Use Reader mode from /tmp/relay-demo/source. Compare the designated archived
+evidence with original text through its authorized R/P source interface, within
+the recorded query budget. Save material and task checkpoints only under the new,
+exclusive /tmp/relay-demo/task-a (including scratch/cache). Do not modify any source
+or source Git state. Deliver the comparison with source locators, then stop.
+
+Resume: Resume /tmp/relay-demo/task-a/TASK.md as Reader. Preserve its source/output
+and query limits, reopen the source entry, and continue only the saved unfinished
+comparison. Do not update the source; report any uncertain unsaved interval.
+
+Integrate: As the authorized Maintainer for this synthetic source, review task-a's
+delivery against current source owners. Selectively integrate applicable findings,
+preserve newer work, read back changes and review the diff. Do not treat the Reader's
+assessment as human acceptance or apply its delivery wholesale.
+```
+
+If mode is omitted, existing explicitly authorized maintenance may continue within
+its scope; tool availability or a checkpoint instruction does not grant authority.
+Missing permissions constrain the affected operation, not all safe reading and
+reporting. Reader restrictions survive compaction and a generic `continue`; mutable
+task metadata cannot grant its author new permissions. The protocol states the
+contract; actual file/tool permissions must enforce it when hard isolation is needed.
 
 ## The minimal model
 
@@ -63,10 +101,11 @@ confirm expected values, and creates a coherent Git diff.
 | Record | Decisions and operational entities, with authority, provenance, and verification | Edit in place; preserve supersession links |
 | Procedure | Exact repeatable work, verification, and recovery | Edit in place |
 
-CHECKPOINT is a lifecycle, not a fourth truth object: write the owning objects
-promptly, confirm the expected local content by bounded read-back, inspect the diff,
-and commit a coherent transition when authorized. Git already supplies the
-append-only history.
+CHECKPOINT is a lifecycle, not a fourth truth object: authorized maintenance writes
+the owning objects, confirms expected local content by bounded read-back, inspects
+the diff, and commits a coherent transition when authorized. Reader checkpoints
+save task progress and evidence outside those owners. Git already supplies the
+project's append-only history.
 
 The default template maps these objects to five canonical Markdown files under
 `.relay/`. Resources, environments, tools, services, jobs, and assets share one
@@ -82,6 +121,7 @@ CLAUDE.md               Claude adapter importing AGENTS.md
 docs/                   Normative protocol and lifecycle documents
 template/               Minimal files copied during INIT
 migration-kit/          Temporary audit and cutover worksheets for MIGRATE
+reader-kit/             Optional task-local Reader boundary/checkpoint template
 examples/coastwatch/    Sanitized, remote-aware research example
 ```
 
@@ -101,8 +141,8 @@ preserves the initial native A failure, and accepted
 post-remediation A/B results.
 
 The current development target is a v0.2 review candidate for bounded workspace
-integrity checks, checkpoint read-back, coordinated writes, and explicit copy and
-handoff boundaries. It retains the canonical object model and the private forensic
-snapshot boundary. New mechanical and native conformance results are recorded
+integrity checks, checkpoint read-back, coordinated writes, explicit copy and
+handoff boundaries, and Reader task isolation. It retains the canonical object model
+and the private forensic snapshot boundary. New mechanical and native conformance results are recorded
 separately in [validation](docs/validation.md); the historical v0.1 pass does not
 establish a v0.2 pass or authorize a new release.

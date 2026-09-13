@@ -169,3 +169,46 @@ git diff --check
 git check-ignore -v .relay/private/migrations/probe/native-sessions/codex/probe
 git ls-files -- .relay/private
 ```
+
+## Reader lifecycle addendum — 2026-09-13
+
+This is an implementation/review candidate based on
+`03078f93f852556aa1d03fb50db2b8caa66fdf0e`, not acceptance of v0.2, Reader conformance,
+or the earlier forensic enhancement. Reader semantics complete the existing
+lifecycle without another canonical object, editable source replica, role registry,
+daemon or orchestrator. Adapters still delegate to START. See the
+[separate native evidence](../.relay/evidence/reader-mode-2026-09-13/README.md) for
+candidate file identity, exact prompt records, operations, outputs and failures.
+
+| Layer | Result and boundary |
+| --- | --- |
+| Protocol/template | Reader/Maintainer/default-mode rules, out-of-source task outputs, bounded R/P queries, basis/drift limits, local checkpoint/recovery, and selective integration are implemented for review. A text contract is not enforced confinement. |
+| Mechanical fixture | **41/41 pass** using `python3 -m unittest discover -s tests -v`: 28 unchanged prior tests plus 13 Reader tests covering R1–R10. These are test-only operation models, not native-agent substitutes. |
+| Fresh native Reader delivery | **FAIL** under the unchanged strict rubric for both Claude Code Opus and Codex. Both obtain the correct synthetic raw comparison and save task outputs without observed source mutations; excess retrieval and other trace-level defects prevent PASS. The first nested-fixture cohort's ancestor-context contamination is retained, not discarded. |
+| Fresh task-only handoff | Separate new native sessions exercise recovery from saved TASK/output without old chat. This is a completed-delivery handoff smoke test, not forced compaction or the whole unfinished-work R6 scenario. See the evidence for per-product defects/verdicts. |
+| Environment enforcement | **Unverified**, not PASS. Codex requests `workspace-write` rooted at task output; its default temporary writable roots may also include generated sources. Claude uses `dontAsk` with declared tools, not an independently verified OS source-write deny. |
+| Full release compatibility | Existing A/B/C native regression, the full native R1–R10 suite and real-system behavior are **not-run at this Reader boundary**. Earlier failures remain open; old sealed PASS evidence does not cover these changes. |
+
+The mechanical review corrected three false-confidence risks before the final run:
+R8 now inserts only in R-002 and compares authority fields; archive quotes and their
+digest derive from the same captured bytes even with a late fixture writer; external
+fixture allocations reject nested/overlapping Reader outputs. Query accounting is
+not reset on recovery; missing accounting stays unknown and blocks further queries,
+not safe saved-work reads. These helpers are disposable test code, never a runtime
+registry or security service.
+
+The native observations use entirely generated source workspaces, local mock text
+and exclusive task outputs. No real project, research data, connector, remote host,
+or prior native history was inspected. Exact local traces remain private; the tracked
+record normalizes generated paths and separates observed tool operations from
+model claims. Before/after checks cover source/mock regular-file bytes including
+source Git index/refs/objects. They do not prove zero physical writes, absence of
+unobserved transient activity, atomic reads or hard permission enforcement.
+
+Markdown links/anchors and shell examples were checked, as was `git diff --check`.
+The prior acceptance document remains a byte-identical prefix with R1–R10 appended.
+The native adapters, historical A/B evidence, frozen Coastwatch dossier, MIGRATE
+capture implementation and existing tests remain unchanged. Tag targets remain
+`v0.1` → `de566c3495019cb4560f5231ce43355004d34514` and `v0.1-design` →
+`18c6c216b8f574e5c436968e4e5032797983dee0`. Stop at owner review; no release,
+acceptance, tag movement, push or real-workspace upgrade follows from these checks.

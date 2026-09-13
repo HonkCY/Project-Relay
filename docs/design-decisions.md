@@ -80,3 +80,41 @@ links, and text search. Any future index remains disposable and rebuildable.
 | Meta-work explosion | three objects, materiality trigger, file sharding only on pain | ordinary-work walkthrough |
 | External orchestrator creep | explicit boundary; no runtime component | repository inventory |
 | Vector-DB reflex | filesystem retrieval first; optional rebuildable index | bootstrap retrieval evidence |
+
+## Reader lifecycle completion — review candidate
+
+The Reader addition addresses a write-back mismatch, not a missing memory layer:
+the same source can serve authorized maintenance and several useful read-only
+investigations. Reader CHECKPOINT/VERIFY saves observations, original excerpts,
+analysis, and recovery progress in a task-exclusive output; the source's D/R/P/STATE
+remain the only operational owners. The optional task template is not a copied
+project snapshot, shared role board, new record class, or source of authorization.
+These are proposed protocol semantics, not newly accepted canonical decisions.
+
+Mode belongs to the session/task. Existing explicitly authorized maintenance is
+backwards compatible when mode is omitted, but writable tools cannot elect a
+Maintainer. A Reader stays Reader through ordinary continuation, recovery, and
+source instructions to write back. An authorization locator records a grant;
+editing one's own metadata does not create one. Insufficient permission stops only
+dependent operations while safe reading and reporting can continue.
+
+Source access, external query authority, and permitted side effects are separate.
+Existing R/P owners carry source/query capabilities and limits; no provider-specific
+query subsystem is needed. Reader access can include original remote material, but
+does not imply unlimited scans, safe arbitrary database copies, zero locks/logs,
+or permission to repair services. A task-scoped read basis includes relevant dirty
+or non-Git content where needed; it neither freezes the whole project nor overrides
+later stop/revocation instructions.
+
+An exclusive out-of-source output with its own scratch/cache is the supported
+default. Branch names and ignore rules alone do not isolate tasks. Reader deliveries
+identify their basis and proposed owners; the current authorized Maintainer checks
+them against newer canonical work and integrates selectively under existing
+materiality, read-back, and acceptance rules. No R record is required merely for
+starting or finishing a Reader task.
+
+The boundary is deliberately a protocol, not a sandbox. Mechanical fixture checks,
+observed native-agent conformance, and enforceable environment restrictions are
+different claims. The [Reader tests](acceptance-tests.md#reader-mode-conformance--review-candidate)
+require them to be reported separately; no change here resolves historical native
+failures or grants a release pass.

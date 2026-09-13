@@ -75,3 +75,20 @@ unchanged; record any new A/B regression against its own candidate boundary.
 Non-empty files, recognizable headings, and readback do not prove freshness,
 cross-file atomicity, fsync, or off-host replication. A complete but stale snapshot
 can pass these limited checks; do not claim otherwise.
+
+## Reader task isolation
+
+The separate [Reader fixture guide](README-reader-mode.md) adds positive
+read/retrieve/deliver, local recovery, invalid output, concurrent Readers,
+source-change, side-effect, and selective Maintainer integration cases. Build only
+fresh synthetic sources and mock interfaces; the cases do not use actual projects,
+connectors, hosts, conversations, or research data. Run them through the same
+`python3 -m unittest discover -s tests -v` entry point.
+
+The additive [R1–R10 criteria](../docs/acceptance-tests.md#reader-mode-conformance--review-candidate)
+preserve all existing checks above. Mechanical guards and operation journals test
+the fixture, not arbitrary native shell enforcement. A genuine native run separately
+records short prompts, read/query/write attempts, output read-back, protected source
+bytes/Git state, source versus fixture-writer events, and limitations. Record actual
+file/tool isolation separately; a mode label, final byte equality, or passing oracle
+does not establish native conformance or physical zero writes.

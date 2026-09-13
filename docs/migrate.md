@@ -5,6 +5,16 @@ truth is partly latent in native conversations, agent memory, tools, repositorie
 remote systems, services, or jobs. It does not use provider export as a dependency.
 The incumbent agent is a migration operator and witness, never automatic authority.
 
+MIGRATE requires explicit Maintainer authorization for the target writes and the
+bounded source inventory/capture. Read-only access to an existing project, an
+incomplete source, or an instruction to continue as Reader does not grant it.
+Reader inspection saves findings in its independent task output; it must not
+initialize Git, scaffold Relay, create an audit dossier in the source, capture
+native-session history, or upgrade adapters merely to repair a bootstrap gap.
+Apply the [session access contract](protocol.md#session-access-contract) before
+the phases below. This gate does not change migration coverage, provenance,
+verification, incumbent-witness, or human-cutover semantics.
+
 During migration, the three `migration-kit/` files form the canonical audit dossier.
 After cutover they become read-only supporting provenance; ongoing truth moves to the
 normal decision, record, procedure, and state owners.
